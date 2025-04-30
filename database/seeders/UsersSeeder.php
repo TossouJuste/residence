@@ -1,5 +1,5 @@
 <?php
- 
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -20,7 +20,7 @@ class UsersSeeder extends Seeder
         // Création d'un utilisateur 'demo' avec le rôle 'Intendant'
         $demoUser = User::create([
             'name'              => $faker->name,
-            'email'             => 'demo@demo1.com',
+            'email'             => 'demo@demo.com',
             'password'          => Hash::make('demo'),
             'email_verified_at' => now(),
         ]);

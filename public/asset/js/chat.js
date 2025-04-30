@@ -1,1 +1,0 @@
-$((function(){"use strict";new PerfectScrollbar(".main-chat-list",{useBothWheelAxes:!0,suppressScrollX:!0}),new PerfectScrollbar("#ChatBody",{useBothWheelAxes:!0,suppressScrollX:!0})}));

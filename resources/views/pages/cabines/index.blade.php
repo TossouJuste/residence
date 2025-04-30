@@ -41,7 +41,8 @@
                         <tr>
                             <th>Batiment</th>
                             <th>Désignation de cabine</th>
-                            <th>Places Disponibles</th>
+                            <th>Places initiales</th>
+                            <th>Places disponibles</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -50,6 +51,7 @@
                             <tr>
                                 <td>{{ $cabine->batiment->nom }}-{{ $cabine->batiment->city->nom }}</td>
                                 <td>{{ $cabine->code }}</td>
+                                <td>{{ $cabine->places_initiales }}</td>
                                 <td>{{ $cabine->places_disponibles }}</td>
                                 <td>
                                     <!-- Dropdown -->

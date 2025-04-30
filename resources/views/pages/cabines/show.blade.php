@@ -7,6 +7,7 @@
             <div class="card-body">
                 <p><strong>Code de cabine:</strong> {{ $cabine->code }}</p>
                 <p><strong>Bâtiment:</strong> {{ $cabine->batiment->nom }}-{{ $cabine->batiment->city->nom }}</p>
+                <p><strong>Nombre de places initiales:</strong> {{ $cabine->places_initiales }}</p>
                 <p><strong>Places Disponibles:</strong> {{ $cabine->places_disponibles }}</p>
             </div>
             <div class="card-footer">

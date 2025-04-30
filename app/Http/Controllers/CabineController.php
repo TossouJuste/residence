@@ -24,13 +24,21 @@ class CabineController extends Controller
     {
         $request->validate([
             'code' => 'required|string|unique:cabines,code',
-            'batiment_id' => 'required|exists:batiments,id', 
-            'places_disponibles' => 'required|integer|min:0',
+            'batiment_id' => 'required|exists:batiments,id',
+            'places_initiales' => 'required|integer|min:0',
         ]);
 
-        Cabine::create($request->all());
+        // Créer la cabine avec places_initiales et places_disponibles initialisées
+        Cabine::create([
+            'code' => $request->code,
+            'batiment_id' => $request->batiment_id,
+            'places_initiales' => $request->places_initiales,
+            'places_disponibles' => $request->places_initiales,  // Initialisation de places_disponibles avec places_initiales
+        ]);
+
         return redirect()->route('cabines.index')->with('success', 'Cabine ajoutée avec succès.');
     }
+
 
     public function show(Cabine $cabine)
     {
@@ -48,10 +56,16 @@ class CabineController extends Controller
         $request->validate([
             'code' => 'required|string|unique:cabines,code,' . $cabine->id,
             'batiment_id' => 'required|exists:batiments,id',
-            'places_disponibles' => 'required|integer|min:0',
+            'places_initiales' => 'required|integer|min:0', 
         ]);
 
-        $cabine->update($request->all());
+        $cabine->update($request->only([
+            'code',
+            'batiment_id',
+            'place_initiale',
+            'places_disponibles'
+        ]));
+
         return redirect()->route('cabines.index')->with('success', 'Cabine mise à jour avec succès.');
     }
 

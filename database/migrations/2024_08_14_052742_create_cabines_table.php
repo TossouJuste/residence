@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique(); // Code de la cabine
             $table->foreignId('batiment_id')->constrained()->onDelete('cascade'); // Clé étrangère vers la table batiments
+            $table->integer('places_initiales'); // Nombre de places initiales
             $table->integer('places_disponibles'); // Nombre de places disponibles
             $table->timestamps(); // Colonnes created_at et updated_at
         });

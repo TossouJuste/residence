@@ -12,7 +12,8 @@ class Cabine extends Model
     // Les attributs pouvant être assignés en masse
     protected $fillable = [
         'code',
-        'batiment_id',  
+        'batiment_id',
+        'places_initiales',
         'places_disponibles'
     ];
 

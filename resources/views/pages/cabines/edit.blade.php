@@ -31,11 +31,11 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
- 
+
                     <div class="mb-3">
-                        <label for="places_disponibles" class="form-label">Places Disponibles</label>
-                        <input type="number" name="places_disponibles" class="form-control" value="{{ old('places_disponibles', $cabine->places_disponibles) }}" required>
-                        @error('places_disponibles')
+                        <label for="places_initiales" class="form-label">Nombre de places initiales</label>
+                        <input type="number" name="places_initiales" class="form-control" value="{{ old('places_initiales', $cabine->places_initiales) }}" required>
+                        @error('places_initiales')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>

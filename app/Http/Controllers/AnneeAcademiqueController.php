@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnneeAcademique;
+use App\Models\Classement;
+use App\Models\Cabine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AnneeAcademiqueController extends Controller
 {
@@ -11,10 +14,10 @@ class AnneeAcademiqueController extends Controller
      * Afficher la liste des années académiques.
      */
     public function index()
-{
-    $anneesAcademiques = AnneeAcademique::orderBy('nom', 'desc')->paginate(10); // Ajoute paginate()
-    return view('pages.annees_academiques.index', compact('anneesAcademiques'));
-}
+    {
+        $anneesAcademiques = AnneeAcademique::orderBy('nom', 'desc')->paginate(10);
+        return view('pages.annees_academiques.index', compact('anneesAcademiques'));
+    }
 
     /**
      * Afficher le formulaire de création.
@@ -26,6 +29,7 @@ class AnneeAcademiqueController extends Controller
 
     /**
      * Enregistrer une nouvelle année académique.
+     * Réinitialise les places_disponibles si aucun classement n'existe encore.
      */
     public function store(Request $request)
     {
@@ -35,20 +39,24 @@ class AnneeAcademiqueController extends Controller
             'date_fin' => 'required|date|after:date_debut',
         ]);
 
-        AnneeAcademique::create([
+        // Création de l'année académique
+        $annee = AnneeAcademique::create([
             'nom' => $request->nom,
             'date_debut' => $request->date_debut,
             'date_fin' => $request->date_fin,
         ]);
 
+         // Réinitialisation des places disponibles pour toutes les cabines
+        Cabine::query()->update([
+            'places_disponibles' => DB::raw('places_initiales')
+        ]);
+
         return redirect()->route('annees-academiques.index')->with('success', 'Année académique ajoutée avec succès !');
     }
-
 
     /**
      * Afficher une année académique spécifique.
      */
-
     public function show($id)
     {
         $anneeAcademique = AnneeAcademique::findOrFail($id);
@@ -82,7 +90,6 @@ class AnneeAcademiqueController extends Controller
 
         return redirect()->route('annees-academiques.index')->with('success', 'Année académique mise à jour avec succès !');
     }
-
 
     /**
      * Supprimer une année académique.
