@@ -26,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_login_at',
         'last_login_ip',
         'profile_photo_path',
+        'role'
     ];
 
     /**
@@ -65,5 +66,17 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getDefaultAddressAttribute()
     {
         return $this->addresses?->first();
+    }
+
+    public function getRoleLevel()
+    {
+        return match ($this->role) {
+            'admin' => 5,
+            'intendant' => 4,
+            'caissiere' => 3,
+            'chef_cite' => 2,
+            'chef_batiment' => 1,
+            default => 0
+        };
     }
 }

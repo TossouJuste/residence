@@ -1,6 +1,6 @@
- 
+
 <?php
- 
+
 use App\Http\Controllers\Apps\PermissionManagementController;
 use App\Http\Controllers\Apps\RoleManagementController;
 use App\Http\Controllers\Apps\UserManagementController;
@@ -42,19 +42,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/user-management/roles', RoleManagementController::class);
         Route::resource('/user-management/permissions', PermissionManagementController::class);
     });
- 
+
 
     Route::prefix('gestion')->group(function () {
         // Gestion des cités
-        Route::name('cities.')->prefix('cities')->group(function () {
-            Route::get('/', [CityController::class, 'index'])->name('index');
-            Route::get('/create', [CityController::class, 'create'])->name('create');
-            Route::post('/', [CityController::class, 'store'])->name('store');
-            Route::get('/{id}', [CityController::class, 'show'])->name('show');
-            Route::get('/{id}/edit', [CityController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [CityController::class, 'update'])->name('update');
-            Route::delete('/{id}', [CityController::class, 'destroy'])->name('destroy');
+        Route::middleware(['chef_cite'])->group(function () {
+            Route::name('cities.')->prefix('cities')->group(function () {
+                Route::get('/', [CityController::class, 'index'])->name('index');
+                Route::get('/create', [CityController::class, 'create'])->name('create');
+                Route::post('/', [CityController::class, 'store'])->name('store');
+                Route::get('/{id}', [CityController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [CityController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [CityController::class, 'update'])->name('update');
+                Route::delete('/{id}', [CityController::class, 'destroy'])->name('destroy');
+            });
         });
+
 
         // Gestion des bâtiments
         Route::name('batiments.')->prefix('batiments')->group(function () {
@@ -103,33 +106,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
 
-   //Gestion des critères de répartition
+    //Gestion des critères de répartition
     Route::resource('criteres', CritereController::class);
     Route::post('/classements/{codeSuivi}/validate', [ClassementController::class, 'validateClassement'])
-    ->name('classements.validate');
+        ->name('classements.validate');
     Route::get('/test-planification', [PlanificationController::class, 'ajouterTest']);
 
     // lancement du classement des demandes
     Route::get('/admin/demandes/classement', [DemandeResidenceController::class, 'lancerClassement'])->name('admin.demandes.classement');
 
     Route::post('/classements/{code_suivi}/validate', [ClassementController::class, 'valider'])
-    ->name('classements.validate')
-    ->middleware('auth');
+        ->name('classements.validate')
+        ->middleware('auth');
 
 
- // Gestion des classements
-Route::prefix('classements')->name('classements.')->group(function () {
-    Route::get('/', [ClassementController::class, 'index'])->name('index');
-    Route::get('/create', [ClassementController::class, 'create'])->name('create');
-    Route::post('/', [ClassementController::class, 'store'])->name('store');
-    Route::get('/{code_suivi}', [ClassementController::class, 'show'])->name('show');
-    Route::get('/{code_suivi}/edit', [ClassementController::class, 'edit'])->name('edit');
-    Route::put('/{code_suivi}', [ClassementController::class, 'update'])->name('update');
-    Route::delete('/{code_suivi}', [ClassementController::class, 'destroy'])->name('destroy');
-
-
-
-});
+    // Gestion des classements
+    Route::prefix('classements')->name('classements.')->group(function () {
+        Route::get('/', [ClassementController::class, 'index'])->name('index');
+        Route::get('/create', [ClassementController::class, 'create'])->name('create');
+        Route::post('/', [ClassementController::class, 'store'])->name('store');
+        Route::get('/{code_suivi}', [ClassementController::class, 'show'])->name('show');
+        Route::get('/{code_suivi}/edit', [ClassementController::class, 'edit'])->name('edit');
+        Route::put('/{code_suivi}', [ClassementController::class, 'update'])->name('update');
+        Route::delete('/{code_suivi}', [ClassementController::class, 'destroy'])->name('destroy');
+    });
 
 
 
@@ -139,28 +139,28 @@ Route::prefix('classements')->name('classements.')->group(function () {
     Route::post('admin/demandes/filter', [DemandeResidenceController::class, 'filter'])->name('admin.demandes.filter');
 });
 
-  // Gestion des demandes et de suivi
+// Gestion des demandes et de suivi
 
-  Route::get('/', [DemandeResidenceController::class, 'index']);
-  Route::get('/demande', [DemandeResidenceController::class, 'create'])->name('demandes.create');
-  Route::get('/demande/confirmation/{code_suivi}', [DemandeResidenceController::class, 'confirmation'])->name('demandes.confirmation');
-  Route::post('/demande', [DemandeResidenceController::class, 'store'])->name('demandes.store');
-  Route::get('/suivre', [DemandeResidenceController::class, 'suivre'])->name('suivre');
-  Route::post('/suivi-demande', [DemandeResidenceController::class, 'suivreDemande'])->name('suivi.demande');
-  Route::get('/suivi/demande/{code_suivi}', [DemandeResidenceController::class, 'afficherDemande'])->name('afficher.demande');
-
-
-  // Route pour la validation de la demande
-  Route::get('/validation/{code_suivi}', [ValidationController::class, 'validation'])->name('validation');
-  // Route pour la validation de la quittance
-  Route::get('/validation-quittance/{code_suivi}', [ValidationController::class, 'validerQuittance'])->name('validation.quittance');
-  Route::post('/submit-quittance/{code_suivi}', [ValidationController::class, 'storeQuittance'])->name('submit.quittance');
-  Route::get('/validation-recu-loyer/{code_suivi}', [ValidationController::class, 'validerRecuLoyer'])->name('validation.recu_loyer');
-  Route::post('/submit-recu/{code_suivi}', [ValidationController::class, 'storeRecu'])->name('submit.recu');
+Route::get('/', [DemandeResidenceController::class, 'index']);
+Route::get('/demande', [DemandeResidenceController::class, 'create'])->name('demandes.create');
+Route::get('/demande/confirmation/{code_suivi}', [DemandeResidenceController::class, 'confirmation'])->name('demandes.confirmation');
+Route::post('/demande', [DemandeResidenceController::class, 'store'])->name('demandes.store');
+Route::get('/suivre', [DemandeResidenceController::class, 'suivre'])->name('suivre');
+Route::post('/suivi-demande', [DemandeResidenceController::class, 'suivreDemande'])->name('suivi.demande');
+Route::get('/suivi/demande/{code_suivi}', [DemandeResidenceController::class, 'afficherDemande'])->name('afficher.demande');
 
 
-  // Route pour la validation des pièces au CB
-  //Route::get('/validation/cb/{classement_id}', [ValidationController::class, 'validerCb'])->name('validation.cb');
+// Route pour la validation de la demande
+Route::get('/validation/{code_suivi}', [ValidationController::class, 'validation'])->name('validation');
+// Route pour la validation de la quittance
+Route::get('/validation-quittance/{code_suivi}', [ValidationController::class, 'validerQuittance'])->name('validation.quittance');
+Route::post('/submit-quittance/{code_suivi}', [ValidationController::class, 'storeQuittance'])->name('submit.quittance');
+Route::get('/validation-recu-loyer/{code_suivi}', [ValidationController::class, 'validerRecuLoyer'])->name('validation.recu_loyer');
+Route::post('/submit-recu/{code_suivi}', [ValidationController::class, 'storeRecu'])->name('submit.recu');
+
+
+// Route pour la validation des pièces au CB
+//Route::get('/validation/cb/{classement_id}', [ValidationController::class, 'validerCb'])->name('validation.cb');
 
 
 
@@ -177,5 +177,3 @@ Route::get('/auth/redirect/{provider}', [SocialiteController::class, 'redirect']
 
 // Inclusion des routes d'authentification Laravel (connexion, inscription, mot de passe oublié, etc.)
 require __DIR__ . '/auth.php';
-
-
