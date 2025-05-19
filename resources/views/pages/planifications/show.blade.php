@@ -16,7 +16,7 @@
                 <p><strong>Dernière mise à jour :</strong> {{ $planification->updated_at->format('d/m/Y H:i') }}</p>
             </div>
             <div class="card-footer">
-                <a href="{{ route('planifications.index') }}" class="btn btn-primary">Retour à la liste</a>
+                <a href="{{ route('planifications.index') }}" class="btn btn-success">Retour à la liste</a>
                 <a href="{{ route('planifications.edit', $planification->id) }}" class="btn btn-warning">Éditer</a>
 
                 <form action="{{ route('planifications.destroy', $planification->id) }}" method="POST" style="display:inline;">

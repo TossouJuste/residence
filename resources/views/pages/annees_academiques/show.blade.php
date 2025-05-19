@@ -11,7 +11,7 @@
                 <p><strong>Dernière mise à jour :</strong> {{ $anneeAcademique->updated_at->format('d/m/Y H:i') }}</p>
             </div>
             <div class="card-footer">
-                <a href="{{ route('annees-academiques.index') }}" class="btn btn-primary">Retour à la liste</a>
+                <a href="{{ route('annees-academiques.index') }}" class="btn btn-success">Retour à la liste</a>
                 <a href="{{ route('annees-academiques.edit', $anneeAcademique->id) }}" class="btn btn-warning">Éditer</a>
 
                 <form action="{{ route('annees-academiques.destroy', $anneeAcademique->id) }}" method="POST" style="display:inline;">

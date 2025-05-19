@@ -4,19 +4,14 @@
     <title>Confirmation de votre demande</title>
 </head>
 <body>
-    <h1>Bonjour {{ $nom }},</h1>
-    <p>Nous avons bien reçu votre demande. Voici les informations :</p>
+    <h2>Bonjour {{ $demande->nom }} {{ $demande->prenom }},</h2>
 
-    <ul>
-        <li><strong>Email :</strong> {{ $email }}</li>
-        <li><strong>Code de suivi :</strong> {{ $code_suivi }}</li>
-    </ul>
+    <p>Votre demande de logement universitaire a bien été enregistrée.</p>
 
-    <p>Utilisez ce code pour suivre l'état de votre demande.</p>
+    <p><strong>Code de suivi :</strong> {{ $demande->code_suivi }}</p>
 
-    <p>Merci de nous faire confiance.</p>
+    <p>Merci de conserver ce code pour suivre l’évolution de votre demande</p>
 
-    <p>Cordialement,</p>
-    <p>L'équipe de support</p>
+    <p>Cordialement,<br>L'équipe de gestion des résidences COUS AC</p>
 </body>
 </html>

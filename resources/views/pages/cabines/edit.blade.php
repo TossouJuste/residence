@@ -39,7 +39,7 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary">Modifier</button>
+                    <button type="submit" class="btn btn-success">Modifier</button>
                     <a href="{{ route('cabines.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

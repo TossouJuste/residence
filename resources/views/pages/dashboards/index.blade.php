@@ -1,7 +1,7 @@
 <x-default-layout>
 
     @section('title')
-        Dashboard
+        TABLEAU DE BORD
     @endsection
 
 

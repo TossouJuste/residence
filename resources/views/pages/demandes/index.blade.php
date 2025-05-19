@@ -5,7 +5,7 @@
             <h3>Liste des Demandes</h3>
 
             <!-- Bouton Lancer le Classement -->
-            <button class="btn btn-primary" id="btn-lancer-classement">
+            <button class="btn btn-success" id="btn-lancer-classement">
                 <i class="fas fa-sort"></i> Lancer le Classement
             </button>
         </div>
@@ -13,24 +13,47 @@
         <div class="card-body">
             <!-- Formulaire pour changer l'année -->
             <form method="GET" action="{{ route('admin.demandes.index') }}">
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <label for="academic_year">Année académique :</label>
-                        <select name="academic_year_id" id="academic_year" class="form-control" onchange="this.form.submit()">
-                            @foreach($academicYears as $year)
-                                <option value="{{ $year->id }}" {{ $year->id == $academicYearId ? 'selected' : '' }}>
-                                    {{ $year->nom }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </form>
+    <div class="row mb-4">
+        <!-- Année académique -->
+        <div class="col-md-3">
+            <label for="academic_year">Année académique :</label>
+            <select name="academic_year_id" id="academic_year" class="form-control" onchange="this.form.submit()">
+                @foreach($academicYears as $year)
+                    <option value="{{ $year->id }}" {{ $year->id == $academicYearId ? 'selected' : '' }}>
+                        {{ $year->nom }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Filtre de demande -->
+        <div class="col-md-3">
+            <label for="filtre">Filtrer les demandes :</label>
+            <select name="filtre" id="filtre" class="form-control" onchange="this.form.submit()">
+                <option value="all" {{ $filtre == 'all' ? 'selected' : '' }}>Toutes les demandes</option>
+                <option value="classe" {{ $filtre == 'classe' ? 'selected' : '' }}>Demandes classées</option>
+                <option value="non_classe" {{ $filtre == 'non_classe' ? 'selected' : '' }}>Demandes non classées</option>
+                <option value="classe_non_valide" {{ $filtre == 'classe_non_valide' ? 'selected' : '' }}>Demandes classées non validées</option>
+                <option value="classement_invalide" {{ $filtre == 'classement_invalide' ? 'selected' : '' }}>Classements invalides</option>
+            </select>
+        </div>
+
+        <!-- Export PDF -->
+        <div class="col-md-3 mt-4">
+            <a href="{{ route('demandes.export.pdf', ['academic_year_id' => $academicYearId, 'filtre' => $filtre]) }}" class="btn btn-danger">
+                 Exporter en PDF
+            </a>
+
+        </div>
+    </div>
+</form>
+
 
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Nom</th>
                             <th>Prénom</th>
                             <th>Téléphone</th>
@@ -44,6 +67,7 @@
                     <tbody>
                         @forelse($demandes as $demande)
                             <tr>
+                                <td>{{ $loop->iteration }}</td> <!-- Numérotation automatique -->
                                 <td>{{ $demande->nom }}</td>
                                 <td>{{ $demande->prenom }}</td>
                                 <td>{{ $demande->telephone }}</td>
@@ -51,7 +75,7 @@
                                 <td>{{ $demande->sexe }}</td>
                                 <td>{{ $demande->date_naissance }}</td>
                                 <td>{{ $demande->filiere }}</td>
-                                <td>{{ ucfirst($demande->statut_aide) }}</td> 
+                                <td>{{ ucfirst($demande->statut_aide) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -62,10 +86,6 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-center">
-                {{ $demandes->links() }}
-            </div>
         </div>
     </div>
 

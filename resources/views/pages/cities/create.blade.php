@@ -31,7 +31,7 @@
 
                     <div class="form-group">
 
-                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <button type="submit" class="btn btn-success">Créer</button>
                     <a href="{{ route('cities.index') }}" class="btn btn-secondary">Retour à la liste</a>
 
                     </div>

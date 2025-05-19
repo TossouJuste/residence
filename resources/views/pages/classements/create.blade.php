@@ -1,4 +1,4 @@
-<x-default-layout> 
+<x-default-layout>
 
     <div class="card">
         <div class="card-header">
@@ -10,16 +10,18 @@
 
                 <!-- Sélection de la Demande (dernière année académique uniquement) -->
                 <div class="form-group">
-                    <label for="code_suivi">Demande</label>
-                    <select name="code_suivi" id="code_suivi" class="form-control" required>
-                        <option value="">Sélectionnez une demande</option>
+                    <label for="code_suivi">Code de suivi</label>
+                    <input list="demandesList" id="code_suivi" name="code_suivi" class="form-control" placeholder="Commencez à taper un code de suivi..." required>
+
+                    <datalist id="demandesList">
                         @foreach($demandes as $demande)
                             <option value="{{ $demande->code_suivi }}">
-                                {{ $demande->nom }} {{ $demande->prenom }} ({{ $demande->code_suivi }})
+                                {{ $demande->nom }} {{ $demande->prenom }}
                             </option>
                         @endforeach
-                    </select>
+                    </datalist>
                 </div>
+
 
                 <!-- Sélection de la Cabine (Seulement celles avec des places disponibles) -->
                 <div class="form-group">

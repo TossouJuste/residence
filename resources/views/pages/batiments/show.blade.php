@@ -15,7 +15,7 @@
                 <p><strong>Description:</strong> {{ $batiment->description }}</p>
             </div>
             <div class="card-footer">
-                <a href="{{ route('batiments.index') }}" class="btn btn-primary">Retour à la liste des bâtiments</a>
+                <a href="{{ route('batiments.index') }}" class="btn btn-success">Retour à la liste des bâtiments</a>
                 <a href="{{ route('batiments.edit', $batiment->id) }}" class="btn btn-warning">Éditer</a>
                 <form action="{{ route('batiments.destroy', $batiment->id) }}" method="POST" style="display:inline;">
                     @csrf

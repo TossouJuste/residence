@@ -11,7 +11,7 @@
                 <p><strong>Places Disponibles:</strong> {{ $cabine->places_disponibles }}</p>
             </div>
             <div class="card-footer">
-                <a href="{{ route('cabines.index') }}" class="btn btn-primary">Retour à la liste des cabines</a>
+                <a href="{{ route('cabines.index') }}" class="btn btn-success">Retour à la liste des cabines</a>
                 <a href="{{ route('cabines.edit', $cabine->id) }}" class="btn btn-warning">Éditer</a>
                 <form action="{{ route('cabines.destroy', $cabine->id) }}" method="POST" style="display:inline;">
                     @csrf

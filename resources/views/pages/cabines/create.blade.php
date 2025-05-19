@@ -38,7 +38,7 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
                     <a href="{{ route('cabines.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

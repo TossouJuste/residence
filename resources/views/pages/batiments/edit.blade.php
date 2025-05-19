@@ -64,7 +64,7 @@
 
 
 
-                            <button type="submit" class="btn btn-primary">Mettre à Jour</button>
+                            <button type="submit" class="btn btn-success">Mettre à Jour</button>
                             <a href="{{ route('batiments.index') }}" class="btn btn-secondary">Annuler</a>
                         </form>
                     </div>

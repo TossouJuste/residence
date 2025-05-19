@@ -31,28 +31,35 @@ class AnneeAcademiqueController extends Controller
      * Enregistrer une nouvelle année académique.
      * Réinitialise les places_disponibles si aucun classement n'existe encore.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nom' => 'required|string|unique:annees_academiques,nom',
-            'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after:date_debut',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'nom' => 'required|string|unique:annees_academiques,nom',
+        'date_debut' => 'required|date',
+        'date_fin' => 'required|date|after:date_debut',
+    ]);
 
-        // Création de l'année académique
-        $annee = AnneeAcademique::create([
-            'nom' => $request->nom,
-            'date_debut' => $request->date_debut,
-            'date_fin' => $request->date_fin,
-        ]);
+    // Création de l'année académique
+    $annee = AnneeAcademique::create([
+        'nom' => $request->nom,
+        'date_debut' => $request->date_debut,
+        'date_fin' => $request->date_fin,
+    ]);
 
-         // Réinitialisation des places disponibles pour toutes les cabines
-        Cabine::query()->update([
-            'places_disponibles' => DB::raw('places_initiales')
-        ]);
+    // Réinitialisation des places disponibles pour toutes les cabines
+    Cabine::query()->update([
+        'places_disponibles' => DB::raw('places_initiales')
+    ]);
 
-        return redirect()->route('annees-academiques.index')->with('success', 'Année académique ajoutée avec succès !');
-    }
+    // Invalider tous les classements non validés (est_valide != 1)
+    \App\Models\Classement::where(function ($query) {
+        $query->whereNull('est_valide')
+              ->orWhere('est_valide', '!=', 1);
+    })->update(['peut_valider' => false]);
+
+    return redirect()->route('annees-academiques.index')->with('success', 'Année académique ajoutée avec succès !');
+}
+
 
     /**
      * Afficher une année académique spécifique.

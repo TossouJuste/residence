@@ -24,8 +24,9 @@ class UsersDataTable extends DataTable
                 return view('pages/apps.user-management.users.columns._user', compact('user'));
             })
             ->editColumn('role', function (User $user) {
-                return ucwords($user->roles->first()?->name);
+                return ucwords($user->role);
             })
+
             ->editColumn('last_login_at', function (User $user) {
                 return sprintf('<div class="badge badge-light fw-bold">%s</div>', $user->last_login_at ? $user->last_login_at->diffForHumans() : $user->updated_at->diffForHumans());
             })

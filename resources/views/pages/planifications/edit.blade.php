@@ -13,11 +13,11 @@
                  <div class="mb-3">
     <label for="description" class="form-label">Description</label>
     <select name="description" id="description" class="form-control" required>
-        <option value="Lancement d'inscription" 
+        <option value="Lancement d'inscription"
             {{ old('description', $planification->description ?? '') == "Lancement d'inscription" ? 'selected' : '' }}>
             Lancement d'inscription
         </option>
-        <option value="Résultat" 
+        <option value="Résultat"
             {{ old('description', $planification->description ?? '') == "Résultat" ? 'selected' : '' }}>
             Résultat
         </option>
@@ -81,7 +81,7 @@
                     <input type="hidden" name="cree_par" value="{{ auth()->user()->id }}">
 
                     <!-- Boutons d'action -->
-                    <button type="submit" class="btn btn-primary">Modifier</button>
+                    <button type="submit" class="btn btn-success">Modifier</button>
                     <a href="{{ route('planifications.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

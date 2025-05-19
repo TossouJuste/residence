@@ -3,18 +3,19 @@
 <!--begin::Head-->
 <head>
     <base href=""/>
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>COUS AC</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8"/>
-    <meta name="description" content=""/>
+    <meta name="description" content="Gestion de résidences universitaires"/>
     <meta name="keywords" content=""/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta property="og:locale" content="en_US"/>
     <meta property="og:type" content="article"/>
     <meta property="og:title" content=""/>
-    <link rel="canonical" href="{{ url()->current() }}"/>
 
-    {!! includeFavicon() !!}
+     <!-- Favicons -->
+  <link href="assets/media/logos/logo-cousac.jpeg" rel="icon">
+  <link href="assets/media/logos/logo-cousac.jpeg" rel="cous-ac">
 
     <!--begin::Fonts-->
     {!! includeFonts() !!}

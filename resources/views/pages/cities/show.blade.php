@@ -15,7 +15,7 @@
             <p><strong>Description:</strong> {{ $city->description }}</p>
         </div>
         <div class="card-footer">
-            <a href="{{ route('cities.index') }}" class="btn btn-primary">Retour à la liste des cités</a>
+            <a href="{{ route('cities.index') }}" class="btn btn-success">Retour à la liste des cités</a>
             <a href="{{ route('cities.edit', $city->id) }}" class="btn btn-warning">Éditer</a>
             <form action="{{ route('cities.destroy', $city->id) }}" method="POST" style="display:inline;">
                 @csrf

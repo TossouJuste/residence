@@ -78,7 +78,7 @@ class PlanificationController extends Controller
     // 🔹 Validation des champs
     $request->validate([
         'annee_academique_id' => 'required|exists:annees_academiques,id',
-        'date_debut' => 'required|date|after_or_equal:today',
+        'date_debut' => 'required|date',
         'date_fin' => 'required|date|after:date_debut',
         'description' => 'nullable|string',
         'statut' => 'required|in:ouverte,fermée', // 🔹 Validation du statut

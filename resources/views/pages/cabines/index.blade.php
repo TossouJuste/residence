@@ -14,13 +14,17 @@
                 <!--end::Search-->
             </div>
             <!--end::Card title-->
+<form action="{{ route('classements.liberer') }}" method="POST" onsubmit="return confirm('Libérer les cabines non validées ?')">
+    @csrf
+    <button class="btn btn-warning" type="submit">🔓 Libérer les cabines non validées</button>
+</form>
 
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end">
                     <!--begin::Add cabine-->
-                    <a href="{{ route('cabines.create') }}" class="btn btn-primary">
+                    <a href="{{ route('cabines.create') }}" class="btn btn-success">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
                         Ajouter une Cabine
                     </a>
@@ -56,7 +60,7 @@
                                 <td>
                                     <!-- Dropdown -->
                                     <div class="dropdown">
-                                        <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton{{ $cabine->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-light btn-active-light-success btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton{{ $cabine->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Actions
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $cabine->id }}">

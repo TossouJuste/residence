@@ -13,7 +13,7 @@
 
             <!--begin::Subtitle-->
             <div class="text-gray-500 fw-semibold fs-6">
-                Your Social Campaigns
+                Your Social Campaign
             </div>
             <!--end::Subtitle--->
         </div>

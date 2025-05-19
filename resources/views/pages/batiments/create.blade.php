@@ -58,7 +58,7 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Créer</button>
+                    <button type="submit" class="btn btn-success">Créer</button>
                     <a href="{{ route('batiments.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

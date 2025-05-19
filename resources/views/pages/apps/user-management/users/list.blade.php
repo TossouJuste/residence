@@ -1,12 +1,9 @@
 <x-default-layout>
 
     @section('title')
-        Users
+        Utilisateurs
     @endsection
 
-    @section('breadcrumbs')
-        {{ Breadcrumbs::render('user-management.users.index') }}
-    @endsection
 
     <div class="card">
         <!--begin::Card header-->
@@ -27,9 +24,9 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     <!--begin::Add user-->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
-                        Add User
+                        Créer un utilisateur
                     </button>
                     <!--end::Add user-->
                 </div>

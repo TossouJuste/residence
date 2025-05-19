@@ -3,13 +3,12 @@
 	<!--begin::Header-->
 	<div class="card-header pt-5">
 		<!--begin::Title-->
-		<h3 class="card-title text-gray-800 fw-bold">External Links</h3>
+		<h3 class="card-title text-gray-800 fw-bold">Liens utiles</h3>
 		<!--end::Title-->
 		<!--begin::Toolbar-->
 		<div class="card-toolbar">
 			<!--begin::Menu-->
-			<button class="btn btn-icon btn-color-gray-500 btn-active-color-primary justify-content-end" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-overflow="true">{!! getIcon('dots-square', 'fs-1 text-gray-300 me-n1') !!}</button>
-			<!--begin::Menu 2-->
+			 <!--begin::Menu 2-->
 			<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true">
 				<!--begin::Menu item-->
 				<div class="menu-item px-3">
@@ -21,12 +20,12 @@
 				<!--end::Menu separator-->
 				<!--begin::Menu item-->
 				<div class="menu-item px-3">
-					<a href="#" class="menu-link px-3">New Ticket</a>
+					<a href="#" class="menu-link px-3">Demande</a>
 				</div>
 				<!--end::Menu item-->
 				<!--begin::Menu item-->
 				<div class="menu-item px-3">
-					<a href="#" class="menu-link px-3">New Customer</a>
+					<a href="#" class="menu-link px-3">Classements</a>
 				</div>
 				<!--end::Menu item-->
 				<!--begin::Menu item-->
@@ -85,7 +84,7 @@
 		<!--begin::Item-->
 		<div class="d-flex flex-stack">
 			<!--begin::Section-->
-			<a href="#" class="text-primary fw-semibold fs-6 me-2">Avg. Client Rating</a>
+			<a href="/admin/demandes" class="text-primary fw-semibold fs-6 me-2">Demandes</a>
 			<!--end::Section-->
 			<!--begin::Action-->
 			<button type="button" class="btn btn-icon btn-sm h-auto btn-color-gray-500 btn-active-color-primary justify-content-end">{!! getIcon('exit-right-corner', 'fs-2') !!}</button>
@@ -98,7 +97,7 @@
 		<!--begin::Item-->
 		<div class="d-flex flex-stack">
 			<!--begin::Section-->
-			<a href="#" class="text-primary fw-semibold fs-6 me-2">Instagram Followers</a>
+			<a href="/classements" class="text-primary fw-semibold fs-6 me-2">Classement</a>
 			<!--end::Section-->
 			<!--begin::Action-->
 			<button type="button" class="btn btn-icon btn-sm h-auto btn-color-gray-500 btn-active-color-primary justify-content-end">{!! getIcon('exit-right-corner', 'fs-2') !!}</button>
@@ -111,7 +110,7 @@
 		<!--begin::Item-->
 		<div class="d-flex flex-stack">
 			<!--begin::Section-->
-			<a href="#" class="text-primary fw-semibold fs-6 me-2">Google Ads CPC</a>
+			<a href="/gestion/planifications" class="text-primary fw-semibold fs-6 me-2">Planifications</a>
 			<!--end::Section-->
 			<!--begin::Action-->
 			<button type="button" class="btn btn-icon btn-sm h-auto btn-color-gray-500 btn-active-color-primary justify-content-end">{!! getIcon('exit-right-corner', 'fs-2') !!}</button>

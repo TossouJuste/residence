@@ -5,12 +5,14 @@ use Illuminate\Support\Str;
 use App\Models\Demande;
 use Illuminate\Http\Request;
 use App\Models\Classement;
+use App\Models\AnneeAcademique;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cabine;
 use App\Models\Planification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DemandeRecue;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DemandeResidenceController extends Controller
 {
@@ -20,17 +22,29 @@ class DemandeResidenceController extends Controller
         return view('vitrine.index');
     }
 
-    public function create()
-    {
-        // Vérifier s'il existe une planification en cours
-        $planification = \App\Models\Planification::where('statut', 'ouverte')
-                        ->where('description', 'Lancement d\'inscription')
-                        ->latest()
-                        ->first(); 
-    
-        return view('vitrine.createdemande', compact('planification'));
+
+ public function create()
+{
+    // 🔹 Récupérer la dernière année académique (par exemple la plus récente)
+    $anneeAcademique = \App\Models\AnneeAcademique::latest()->first();
+
+    if (!$anneeAcademique) {
     }
-    
+
+    // 🔹 Récupérer la planification ouverte avec description spécifique liée à cette année
+    $planification = \App\Models\Planification::where('statut', 'ouverte')
+        ->where('description', 'Lancement d\'inscription')
+        ->where('annee_academique_id', $anneeAcademique->id)
+        ->latest()
+        ->first();
+
+    if (!$planification) {
+        }
+
+    return view('vitrine.createdemande', compact('planification'));
+}
+
+
 
     public function store(Request $request)
     {
@@ -70,6 +84,17 @@ class DemandeResidenceController extends Controller
         // Associer la demande à la planification existante
         $validatedData['planification_id'] = $planification->id ;
 
+        // Vérification d'une demande déjà existante cette année
+        $demandeExistante = Demande::where('nom', $validatedData['nom'])
+            ->where('prenom', $validatedData['prenom'])
+            ->where('date_naissance', $validatedData['date_naissance'])
+            ->where('planification_id', $validatedData['planification_id'])
+            ->first();
+        if ($demandeExistante) {
+            return redirect()->back()->with('error', 'Vous avez déjà soumis une demande cette année.');
+        }
+
+
         // Générer un code de suivi unique
         $validatedData['code_suivi'] = strtoupper(uniqid('REQ'));
 
@@ -79,10 +104,63 @@ class DemandeResidenceController extends Controller
         // Stocker la demande
         $demande = Demande::create($validatedData);
 
-         ///Mail::to($demande->email)->send(new DemandeRecue($demande, $validatedData['code_suivi']));
+         Mail::to($demande->email)->send(new DemandeRecue($demande, $validatedData['code_suivi']));
 
         return redirect()->route('demandes.confirmation', ['code_suivi' => $demande->code_suivi]);
     }
+
+
+
+
+  public function exportPdf(Request $request)
+{
+    $academicYearId = $request->academic_year_id;
+    $filtre = $request->input('filtre', 'all');
+
+    // Récupère le nom de l'année académique
+    $academicYear = AnneeAcademique::find($academicYearId);
+
+    // Requête filtrée
+    $demandes = Demande::with('classement')
+        ->whereHas('planification', function ($query) use ($academicYearId) {
+            $query->where('annee_academique_id', $academicYearId);
+        })
+        ->when($filtre === 'classe', function ($query) {
+            $query->whereHas('classement');
+        })
+        ->when($filtre === 'non_classe', function ($query) {
+            $query->doesntHave('classement');
+        })
+        ->when($filtre === 'classe_non_valide', function ($query) {
+        $query->whereHas('classement', function ($q) {
+            $q->where(function ($cond) {
+                 $cond->whereNull('est_valide')
+                    ->orWhere('est_valide', '!=', 1);
+                })->where('peut_valider', '!=', false);
+            });
+        })
+        ->when($filtre === 'classement_invalide', function ($query) {
+            $query->whereHas('classement', function ($q) {
+                $q->where('peut_valider', false);
+            });
+        })
+        ->get();
+
+    // Génère le PDF depuis la vue PDF
+    $pdf = Pdf::loadView('pages.demandes.pdf', [
+        'demandes' => $demandes,
+        'academicYear' => $academicYear,
+    ]);
+
+    return $pdf->download('demandes_' . now()->format('Ymd_His') . '.pdf');
+}
+
+
+
+
+
+
+
 
     public function confirmation($code_suivi)
     {
@@ -164,30 +242,51 @@ class DemandeResidenceController extends Controller
 
 
 
-    public function admin_index(Request $request)
-    {
-        // Récupérer la dernière année académique créer
-       $latestAcademicYear = \App\Models\AnneeAcademique::latest()->first();
+public function admin_index(Request $request)
+{
+    // Récupérer la dernière année académique créée
+    $latestAcademicYear = \App\Models\AnneeAcademique::latest()->first();
 
-       // Vérifier si une année académique existe
-       if(!$latestAcademicYear){
-        return redirect()->back()->with('error', 'Aucune année académique trouvé.');
-       }
-
-       // Récupérer l'année académique sélectionnée ( par défaut, la dernière créée)
-       $academicYearId = $request->input('academic_year_id',$latestAcademicYear->id);
-
-       // Récupérer les demandes a cette année académique via la planification
-       $demandes = Demande::whereHas('planification', function ($query) use ($academicYearId){
-            $query->where('annee_academique_id', $academicYearId);
-       })->paginate(10);
-
-
-        // Récupérer toutes les années académique disponible pour le filtre
-        $academicYears = \App\Models\AnneeAcademique::orderBy('id', 'desc')->get();
-
-        return view('pages.demandes.index', compact('demandes', 'academicYearId', 'academicYears'));
+    if (!$latestAcademicYear) {
+        return redirect()->back()->with('error', 'Aucune année académique trouvée.');
     }
+
+    // Récupérer l'année sélectionnée et le filtre
+    $academicYearId = $request->input('academic_year_id', $latestAcademicYear->id);
+    $filtre = $request->input('filtre', 'all');
+
+    // Requête avec filtres dynamiques
+    $demandes = \App\Models\Demande::with('classement')
+        ->whereHas('planification', function ($query) use ($academicYearId) {
+            $query->where('annee_academique_id', $academicYearId);
+        })
+        ->when($filtre === 'classe', function ($query) {
+            $query->whereHas('classement');
+        })
+        ->when($filtre === 'non_classe', function ($query) {
+            $query->doesntHave('classement');
+        })
+       ->when($filtre === 'classe_non_valide', function ($query) {
+            $query->whereHas('classement', function ($q) {
+                $q->where(function ($cond) {
+                    $cond->whereNull('est_valide')
+                        ->orWhere('est_valide', '!=', 1);
+                })->where('peut_valider', true); // On ne garde que ceux qu'on peut encore valider
+            });
+        })
+
+        ->when($filtre === 'classement_invalide', function ($query) {
+            $query->whereHas('classement', function ($q) {
+                $q->where('peut_valider', false);
+            });
+        })
+        ->get();
+
+    $academicYears = \App\Models\AnneeAcademique::orderBy('id', 'desc')->get();
+
+    return view('pages.demandes.index', compact('demandes', 'academicYearId', 'academicYears', 'filtre'));
+}
+
 
     public function autocomplete(Request $request)
     {
@@ -202,50 +301,61 @@ class DemandeResidenceController extends Controller
     function lancerClassement()
     {
         DB::transaction(function () {
-            // 🔹 Récupérer la dernière planification avec description "Lancement d'inscription"
+           // 🔹 Récupérer la dernière planification avec description "Lancement d'inscription"
             $planification = Planification::where('description', 'Lancement d\'inscription')
-                ->orderBy('created_at', 'desc')
-                ->first();
+            ->orderBy('created_at', 'desc')
+            ->first();
 
             if (!$planification) {
-                throw new \Exception("Aucune planification d'inscription trouvée.");
+            throw new \Exception("Aucune planification d'inscription trouvée.");
             }
 
-            // 🔹 Récupérer les demandes éligibles (pas encore classées)
+            // 🔹 Vérifier que la planification appartient à la dernière année académique
+            $anneeAcademique = AnneeAcademique::orderBy('id', 'desc')->first(); // ou 'created_at' selon le modèle
+
+            if (!$anneeAcademique) {
+            throw new \Exception("Aucune année académique trouvée.");
+            }
+
+            // 🔹 Récupérer les demandes éligibles (pas encore classées), sans handicap et liées à l'année académique courante
             $demandes = Demande::where('planification_id', $planification->id)
-                ->whereDoesntHave('classement') // Exclure celles déjà classées
-                ->get();
+            ->whereHas('planification', function ($query) use ($anneeAcademique) {
+             $query->where('annee_academique_id', $anneeAcademique->id);
+            })
+            ->where('handicap', false) // Supposons que ce champ indique la situation de handicap (booléen)
+            ->whereDoesntHave('classement') // Exclure celles déjà classées
+            ->get();
 
             if ($demandes->isEmpty()) {
-                throw new \Exception("Aucune demande éligible trouvée.");
+            throw new \Exception("Aucune demande éligible trouvée.");
             }
 
             // 🔹 Calculer le score pour chaque demande
             $demandes = $demandes->map(function ($demande) {
                 $score = 0;
 
-                // 📌 Critère 1 : Âge (plus jeune = meilleur score)
+                // Critère 1 : Âge (plus jeune = meilleur score)
                 $age = now()->diffInYears($demande->date_naissance);
                 $score += (100 - $age); // Moins on est âgé, plus le score est élevé.
 
-                // 📌 Critère 2 : Ancienneté en cabine
+                // Critère 2 : Ancienneté en cabine
                 if ($demande->ancien_resident) {
                     $score -= 20; // Malus si déjà résident.
                 }
 
-                // 📌 Critère 3 : Statut financier
+                // Critère 3 : Statut financier
                 if ($demande->boursier || $demande->secouru) {
                     $score += 20; // Bonus pour étudiants en difficulté financière.
                 } elseif ($demande->salarie) {
                     $score -= 50; // Malus pour les salariés.
                 }
 
-                // 📌 Critère 4 : Redoublement
+                // Critère 4 : Redoublement
                 if ($demande->redoublant) {
                     $score -= 20; // Malus si redoublant.
                 }
 
-                // 📌 Sauvegarde du score temporaire (non en BDD)
+                // Sauvegarde du score temporaire (non en BDD)
                 $demande->score = $score;
                 return $demande;
             });

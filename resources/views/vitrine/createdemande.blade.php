@@ -6,12 +6,12 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Faire une demande</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <meta content="" name="Système de gestion des résidences universitaires">
+  <meta content="" name="cousac, résidence, uac">
 
   <!-- Favicons -->
-  <link href="assets/img2/favicon.png" rel="icon">
-  <link href="assets/img2/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/media/logos/logo-cousac.jpeg" rel="icon">
+  <link href="assets/media/logos/logo-cousac.jpeg" rel="cous-ac">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -83,9 +83,9 @@
                 @if ($errors->has('adresse_residence_parents'))
                 <span class="text-danger">{{ $errors->first('adresse_residence_parents') }}</span>
             @endif
-            
+
             @if ($planification)
-                    
+
             <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
                 <form action="{{ route('demandes.store') }}" method="POST" enctype="multipart/form-data" class="php-email-form mt-4">
                     @csrf
@@ -137,7 +137,7 @@
                         <div class="col-md-6 form-group">
                             <input type="text" name="annee_etude" class="form-control" id="annee_etude" placeholder="ANNEE D'ETUDE" required>
                         </div>
-                        <div class="col-md-6 form-group"> 
+                        <div class="col-md-6 form-group">
                             <select name="statut_aide" class="form-control" required>
                                 <option value="">Êtes-vous boursier ou secouru ?</option>
                                 <option value="boursier">Boursier</option>
@@ -176,7 +176,7 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label>Redoublant :</label>
@@ -235,17 +235,17 @@
 
                 </form>
 
-            </div> 
+            </div>
             @else
                 <div class="alert alert-danger alert-dismissible fade show" role='alert'>
-                    <strong>Aucune demande n'est autorisé en ce moment. Veuillez revenir plus tard</strong> 
+                    <strong>Aucune demande n'est autorisé en ce moment. Veuillez revenir plus tard</strong>
                 </div>
             @endif
 
         </div>
 
       </div>
-    </section><!-- End Contact Section --> 
+    </section><!-- End Contact Section -->
 
 
         </div>

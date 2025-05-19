@@ -31,7 +31,7 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <button type="submit" class="btn btn-success">Ajouter</button>
                     <a href="{{ route('annees-academiques.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

@@ -7,18 +7,18 @@
 			<!--begin::Info-->
 			<div class="d-flex align-items-center">
 				<!--begin::Currency-->
-				<span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">$</span>
+				<span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start"></span>
 				<!--end::Currency-->
 				<!--begin::Amount-->
-				<span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">69,700</span>
+				<span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">3.400</span>
 				<!--end::Amount-->
 				<!--begin::Badge-->
-				<span class="badge badge-light-success fs-base">{!! getIcon('arrow-up', 'fs-5 text-success ms-n1') !!} 2.2%</span>
+				<span class="badge badge-light-success fs-base">{!! getIcon('arrow-up', 'fs-5 text-success ms-n1') !!} </span>
 				<!--end::Badge-->
 			</div>
 			<!--end::Info-->
 			<!--begin::Subtitle-->
-			<span class="text-gray-500 pt-1 fw-semibold fs-6">Projects Earnings in April</span>
+			<span class="text-gray-500 pt-1 fw-semibold fs-6">Demandes</span>
 			<!--end::Subtitle-->
 		</div>
 		<!--end::Title-->
@@ -39,10 +39,10 @@
 				<div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
 				<!--end::Bullet-->
 				<!--begin::Label-->
-				<div class="text-gray-500 flex-grow-1 me-4">Leaf CRM</div>
+				<div class="text-gray-500 flex-grow-1 me-4">Cabines</div>
 				<!--end::Label-->
 				<!--begin::Stats-->
-				<div class="fw-bolder text-gray-700 text-xxl-end">$7,660</div>
+				<div class="fw-bolder text-gray-700 text-xxl-end">//</div>
 				<!--end::Stats-->
 			</div>
 			<!--end::Label-->
@@ -52,10 +52,10 @@
 				<div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
 				<!--end::Bullet-->
 				<!--begin::Label-->
-				<div class="text-gray-500 flex-grow-1 me-4">Mivy App</div>
+				<div class="text-gray-500 flex-grow-1 me-4">Batiments</div>
 				<!--end::Label-->
 				<!--begin::Stats-->
-				<div class="fw-bolder text-gray-700 text-xxl-end">$2,820</div>
+				<div class="fw-bolder text-gray-700 text-xxl-end">//</div>
 				<!--end::Stats-->
 			</div>
 			<!--end::Label-->
@@ -65,10 +65,10 @@
 				<div class="bullet w-8px h-3px rounded-2 me-3" style="background-color: #E4E6EF"></div>
 				<!--end::Bullet-->
 				<!--begin::Label-->
-				<div class="text-gray-500 flex-grow-1 me-4">Others</div>
+				<div class="text-gray-500 flex-grow-1 me-4">Cités</div>
 				<!--end::Label-->
 				<!--begin::Stats-->
-				<div class="fw-bolder text-gray-700 text-xxl-end">$45,257</div>
+				<div class="fw-bolder text-gray-700 text-xxl-end">//</div>
 				<!--end::Stats-->
 			</div>
 			<!--end::Label-->

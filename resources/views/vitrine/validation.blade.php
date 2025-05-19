@@ -6,12 +6,12 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Validation</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <meta content="" name="Système de gestion des résidences universitaires">
+  <meta content="" name="cousac, résidence, uac">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/media/logos/logo-cousac.jpeg" rel="icon">
+  <link href="assets/media/logos/logo-cousac.jpeg" rel="cous-ac">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
@@ -28,13 +28,13 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css2/style.css') }}" rel="stylesheet">
- 
+
 </head>
 
 <body>
 
   <!-- ======= Header ======= -->
-   
+
     @include('vitrine.header');
 
   <!-- End Header -->
@@ -61,13 +61,13 @@
 
         <div class="row gy-4">
 
-         
+
     <!-- ======= formulaire Section ======= -->
     <section id="contact" class="contact">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100"> 
-            
+          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+
               <h5 class="d-flex justify-content-center">Etapes de validation :</h5> <br>
                <div class="row">
                   <div class="col-md-12 form-group">
@@ -77,7 +77,7 @@
                         {{ session('success') }}
                     </div>
                     @endif
-                    
+
                      <!-- Étape 1 : Paiement et validation à la caisse -->
                     <p>1 - Paiement et validation à la caisse
                         @if($classement->validation_quittance)
@@ -91,13 +91,13 @@
                         <button type="button" class="btn btn-danger">Non validé</button>
                         <a href="{{ route('validation.quittance', ['code_suivi' => $classement->code_suivi]) }}" class="btn btn-primary">Valider</a>
                     @endif
-                    
+
                     </p>
 
 
 
                      <!-- Étape 2 : Confirmation au niveau du Chef Cité -->
-                    
+
                      <p>2 - Confirmation au niveau du Chef Cité et bâtiment
                         @if($classement->validation_quittance && $classement->cabine_valide)
                             <!-- Si le reçu de loyer et la cabine sont validés -->
@@ -114,7 +114,7 @@
                             <button type="button" class="btn btn-danger">Non validé</button>
                         @endif
                     </p>
-                    
+
 
                      <!-- Étape 3 : Présentation des pièces au niveau du CB -->
                     <p>3 - Présentation des pièces au niveau du CB avant l'intégration en cabine
@@ -129,7 +129,7 @@
 
 
                   </div>
-              </div>   
+              </div>
 
               <h5 class="d-flex justify-content-center">Dossier a présenter physiquement au niveau du CB avant la prise de clé :</h5> <br>
                <div class="row">
@@ -141,7 +141,7 @@
                       <p>- Reçu des frais de logement</p>
                       <p>- deux exemplaires du contrat </p>
                   </div>
-              </div>    
+              </div>
           </div>
         </div>
 
@@ -149,7 +149,7 @@
     </section><!-- End formulaire Section -->
 
 
-       
+
         </div>
 
       </div>

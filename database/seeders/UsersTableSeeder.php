@@ -25,7 +25,7 @@ class UsersTableSeeder extends Seeder
 
         // Intendant
         User::create([
-            'name' => 'Intendant Général',
+            'name' => 'Intendant',
             'email' => 'intendant@residence.com',
             'password' => Hash::make('password'),
             'role' => 'intendant',
@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
 
         // Caissière
         User::create([
-            'name' => 'Marie Dupont - Caissière',
+            'name' => 'Marielle - Caissière',
             'email' => 'caissiere@residence.com',
             'password' => Hash::make('password'),
             'role' => 'caissiere',
@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
 
         // Chef de Cité
         User::create([
-            'name' => 'Paul Martin - Chef Cité',
+            'name' => 'Justin - Chef Cité',
             'email' => 'chef.cite@residence.com',
             'password' => Hash::make('password'),
             'role' => 'chef_cite',
@@ -52,7 +52,7 @@ class UsersTableSeeder extends Seeder
 
         // Chef de Bâtiment
         User::create([
-            'name' => 'Julie Leroy - Chef Bâtiment',
+            'name' => 'Jules - Chef Bâtiment',
             'email' => 'chef.batiment@residence.com',
             'password' => Hash::make('password'),
             'role' => 'chef_batiment',

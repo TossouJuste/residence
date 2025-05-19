@@ -23,7 +23,7 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end">
                     <!--begin::Add planification-->
-                    <a href="{{ route('planifications.create') }}" class="btn btn-primary">
+                    <a href="{{ route('planifications.create') }}" class="btn btn-success">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
                         Ajouter une Planification
                     </a>
@@ -67,7 +67,7 @@
                                 <td>
                                     <!-- Dropdown -->
                                     <div class="dropdown">
-                                        <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton{{ $planification->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-light btn-active-light-success btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton{{ $planification->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Actions
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $planification->id }}">

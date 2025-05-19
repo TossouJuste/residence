@@ -7,62 +7,127 @@
             <div class="card-title">
                 <h3>Classements</h3>
             </div>
+
             <div>
-                <a href="{{ route('classements.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Faire un classement
-                </a>
+                @if (in_array(Auth::user()->role,['intendant']))
+                    <a href="{{ route('classements.create') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Faire un classement
+                    </a>
+                @endif
             </div>
         </div>
 
-        <div class="card-body">
-            <!-- Formulaire pour sélectionner une année académique -->
-            <form method="GET" action="{{ route('classements.index') }}">
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <label for="academic_year">Année académique :</label>
-                        <select name="academic_year_id" id="academic_year" class="form-control" onchange="this.form.submit()">
-                            @foreach($academicYears as $year)
-                                <option value="{{ $year->id }}" {{ $year->id == $academicYearId ? 'selected' : '' }}>
-                                    {{ $year->nom }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </form>
+       <!-- Formulaire pour filtrer par année académique et type de classement -->
+<form method="GET" action="{{ route('classements.index') }}" id="filterForm">
+    <div class="row mb-4">
+        <!-- Sélecteur d'année académique -->
+        <div class="col-md-3">
+            <select name="academic_year_id" id="academic_year" class="form-control">
+                @foreach($academicYears as $year)
+                    <option value="{{ $year->id }}" {{ $year->id == $academicYearId ? 'selected' : '' }}>
+                        {{ $year->nom }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Filtres de classement -->
+        <div class="col-md-6">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="filtre" id="filtre_all" value="all" {{ $filtre == 'all' ? 'checked' : '' }}>
+                <label class="form-check-label" for="filtre_all">Tous</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="filtre" id="filtre_valide" value="valide" {{ $filtre == 'valide' ? 'checked' : '' }}>
+                <label class="form-check-label" for="filtre_valide">Validés</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="filtre" id="filtre_non_valide" value="non_valide" {{ $filtre == 'non_valide' ? 'checked' : '' }}>
+                <label class="form-check-label" for="filtre_non_valide">Non validés</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="filtre" id="filtre_invalide" value="invalide" {{ $filtre == 'invalide' ? 'checked' : '' }}>
+                <label class="form-check-label" for="filtre_invalide">Invalidés</label>
+            </div>
+        </div>
+
+        <!-- Export -->
+        <div class="col-md-3 mt-4">
+            <a href="{{ route('admin.classements.export.pdf', ['academic_year_id' => $academicYearId, 'filtre' => $filtre]) }}" class="btn btn-danger">
+                Exporter en PDF
+        </a>
+
+        </div>
+    </div>
+</form>
+
+<!-- Script pour déclencher la soumission auto -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('academic_year').addEventListener('change', function () {
+            document.getElementById('filterForm').submit();
+        });
+
+        document.querySelectorAll('input[name="filtre"]').forEach(function (input) {
+            input.addEventListener('change', function () {
+                document.getElementById('filterForm').submit();
+            });
+        });
+    });
+</script>
+
+
 
             <div class="table-responsive">
+            <!-- Champ de recherche -->
+            <div class="d-flex align-items-center position-relative mb-4">
+                {!! getIcon('magnifier', 'fs-3 position-absolute ms-5') !!}
+                <input type="text" id="classementSearchInput" class="form-control form-control-solid w-250px ps-13" placeholder="Rechercher un classement"/>
+            </div>
+
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Code Suivi</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
+                            <th>Nom & Prénom</th>
+                             <th>Année de <br> naissance</th>
+                             <th>Sexe</th>
                             <th>Cabine</th>
                             <th>Bâtiment</th>
                             <th>Cabine validée</th>
-                            <th>Actions</th>
+                            @if (in_array(Auth::user()->role,['caissiere','intendant','admin']))
+                                <th>Actions</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($classements as $classement)
                             <tr>
+                                <tr id="classement-{{ $classement->code_suivi }}">
                                 <td>{{ $classement->code_suivi }}</td>
-                                <td>{{ $classement->demande->nom ?? 'N/A' }}</td>
-                                <td>{{ $classement->demande->prenom ?? 'N/A' }}</td>
+                                <td>{{ $classement->demande->nom ?? 'N/A' }} {{ $classement->demande->prenom ?? 'N/A' }}</td>
+                                <td>{{ $classement->demande->date_naissance ?? 'N/A' }}</td>
+                                <td>{{ $classement->demande->sexe ?? 'N/A' }}</td>
                                 <td>{{ $classement->cabine->code ?? 'N/A' }}</td>
                                 <td>{{ $classement->cabine->batiment->nom ?? 'N/A' }}-{{ $classement->cabine->batiment->city->nom ?? 'N/A' }}</td>
                                 <td>{{ $classement->est_valide ? 'OUI' : 'NON' }}</td>
-<td>
-    @if (!$classement->est_valide)
-        <button type="button" class="btn btn-sm btn-warning"
-            onclick="confirmValidation('{{ route('classements.validate', $classement->code_suivi) }}', '{{ $classement->code_suivi }}')">
-            Valider
-        </button>
-    @else
-        <span class="badge bg-success">Validé</span>
-    @endif
-</td>
+                                <td>
+                                @if (in_array(Auth::user()->role,['caissiere','intendant','admin']))
+                                    @if ($classement->est_valide)
+                                        <span class="badge bg-success">Validé</span>
+                                    @else
+                                        @if ($classement->peut_valider)
+                                            <button type="button" class="btn btn-sm btn-warning"
+                                                onclick="confirmValidation('{{ route('classements.validate', $classement->code_suivi) }}', '{{ $classement->code_suivi }}')">
+                                                Valider
+                                            </button>
+                                        @else
+                                            <button class="btn btn-secondary btn-sm" disabled>Validation désactivée</button>
+                                        @endif
+                                    @endif
+
+                                @endif
+                                </td>
 
 
 
@@ -78,7 +143,7 @@
 
             <!-- Pagination -->
             <div class="d-flex justify-content-center">
-                {{ $classements->links() }}
+
             </div>
         </div>
     </div>
@@ -155,6 +220,22 @@ document.getElementById('confirmBtn').addEventListener('click', function () {
         alert("Une erreur est survenue. Vérifie la console (F12 → Console).");
     });
 });
+
+@push('scripts')
+<script>
+    // Filtrage des classements par la recherche
+    document.getElementById('classementSearchInput').addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('.table tbody tr');
+
+        rows.forEach(row => {
+            let cells = row.querySelectorAll('td');
+            let match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+            row.style.display = match ? '' : 'none';
+        });
+    });
+</script>
+@endpush
 
 
 </script>

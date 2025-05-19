@@ -37,7 +37,7 @@
                                 <textarea name="description" class="form-control" rows="4">{{ old('description', $city->description) }}</textarea>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Update City</button>
+                            <button type="submit" class="btn btn-success">Update City</button>
                             <a href="{{ route('cities.index') }}" class="btn btn-secondary">Cancel</a>
                         </form>
                     </div>

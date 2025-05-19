@@ -22,7 +22,7 @@
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-                
+
 
                     <!-- Sélection de l'année académique -->
                     <div class="mb-3">
@@ -60,7 +60,7 @@
 
 
                     <!-- Boutons -->
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="submit" class="btn btn-success">Enregistrer</button>
                     <a href="{{ route('planifications.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

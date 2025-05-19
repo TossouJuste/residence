@@ -20,7 +20,7 @@
                 <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end">
                     <!--begin::Add annee_academique-->
-                    <a href="{{ route('annees-academiques.create') }}" class="btn btn-primary">
+                    <a href="{{ route('annees-academiques.create') }}" class="btn btn-success">
                         {!! getIcon('plus', 'fs-2', '', 'i') !!}
                         Ajouter une Année Académique
                     </a>
@@ -54,7 +54,7 @@
                                 <td>
                                     <!-- Dropdown -->
                                     <div class="dropdown">
-                                        <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton{{ $anneeAcademique->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button class="btn btn-light btn-active-light-success btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton{{ $anneeAcademique->id }}" data-bs-toggle="dropdown" aria-expanded="false">
                                             Actions
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $anneeAcademique->id }}">

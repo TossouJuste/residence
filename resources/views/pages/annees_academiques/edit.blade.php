@@ -41,7 +41,7 @@
 
 
                     <!-- Boutons d'action -->
-                    <button type="submit" class="btn btn-primary">Modifier</button>
+                    <button type="submit" class="btn btn-success">Modifier</button>
                     <a href="{{ route('annees-academiques.index') }}" class="btn btn-secondary">Retour à la liste</a>
                 </form>
             </div>

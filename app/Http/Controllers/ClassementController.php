@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\AnneeAcademique;
 use App\Models\Cabine;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class ClassementController extends Controller
@@ -41,30 +42,88 @@ class ClassementController extends Controller
     /**
      * Liste des classements en fonction du rôle de l'utilisateur.
      */
-    public function index(Request $request)
-    {
-        // Récupérer la dernière année académique créée
-        $latestAcademicYear = \App\Models\AnneeAcademique::latest()->first();
+public function index(Request $request)
+{
+    $latestAcademicYear = \App\Models\AnneeAcademique::latest()->first();
 
-        // Vérifier si une année académique existe
-        if (!$latestAcademicYear) {
-            return redirect()->back()->with('error', 'Aucune année académique trouvée.');
-        }
-
-        // Récupérer l'année académique sélectionnée (par défaut, la dernière créée)
-        $academicYearId = $request->input('academic_year_id', $latestAcademicYear->id);
-
-        // Récupérer les classements en passant par Demande et Planification
-        $classements = \App\Models\Classement::whereHas('demande.planification', function ($query) use ($academicYearId) {
-            $query->where('annee_academique_id', $academicYearId)
-                  ->where('description', 'Lancement d\'inscription'); // Filtrer sur la planification
-        })->paginate(10);
-
-        // Récupérer toutes les années académiques disponibles pour le filtre
-        $academicYears = \App\Models\AnneeAcademique::orderBy('id', 'desc')->get();
-
-        return view('pages.classements.index', compact('classements', 'academicYearId', 'academicYears'));
+    if (!$latestAcademicYear) {
+        return redirect()->back()->with('error', 'Aucune année académique trouvée.');
     }
+
+    $academicYearId = $request->input('academic_year_id', $latestAcademicYear->id);
+    $filtre = $request->input('filtre', 'all');
+
+    $classements = \App\Models\Classement::whereHas('demande.planification', function ($query) use ($academicYearId) {
+        $query->where('annee_academique_id', $academicYearId)
+              ->where('description', 'Lancement d\'inscription');
+    })
+    ->when($filtre == 'valide', function ($query) {
+        $query->where('est_valide', 1);
+    })
+   ->when($filtre == 'non_valide', function ($query) {
+    $query->where(function ($q) {
+        $q->where(function ($sub) {
+            $sub->whereNull('est_valide')
+                ->orWhere('est_valide', '!=', 1);
+        })->where('peut_valider', true); // ou 1
+    });
+})
+    ->when($filtre == 'invalide', function ($query) {
+        $query->where('peut_valider', false);
+    })
+    ->get();
+
+    $academicYears = \App\Models\AnneeAcademique::orderBy('id', 'desc')->get();
+
+    return view('pages.classements.index', compact('classements', 'academicYearId', 'academicYears', 'filtre'));
+}
+
+
+
+
+
+public function exportPdf(Request $request)
+{
+    $academicYearId = $request->academic_year_id;
+    $filtre = $request->input('filtre', 'all');
+
+    // Récupère le nom de l'année académique
+    $academicYear = AnneeAcademique::find($academicYearId);
+
+    // Récupère les classements avec filtres
+   $classements = \App\Models\Classement::whereHas('demande.planification', function ($query) use ($academicYearId) {
+        $query->where('annee_academique_id', $academicYearId)
+              ->where('description', 'Lancement d\'inscription');
+    })
+    ->when($filtre == 'valide', function ($query) {
+        $query->where('est_valide', 1);
+    })
+    ->when($filtre == 'non_valide', function ($query) {
+        $query->where(function ($q) {
+            $q->whereNull('est_valide')
+              ->orWhere('est_valide', '!=', 1);
+        })->where('peut_valider', '!=', false);
+    })
+    ->when($filtre == 'invalide', function ($query) {
+        $query->where('peut_valider', false);
+    })
+    // 👉 Trie les classements par le nom du demandeur (relation "demande")
+    ->with('demande') // Assure que la relation est chargée
+    ->get()
+    ->sortBy(function ($classement) {
+        return $classement->demande->nom ?? '';
+    });
+
+
+    // Génère le PDF
+    $pdf = Pdf::loadView('pages.classements.pdf', [
+        'classements' => $classements,
+        'academicYear' => $academicYear,
+    ]);
+
+    return $pdf->download('classements_' . now()->format('Ymd_His') . '.pdf');
+}
+
 
 
 
@@ -81,20 +140,54 @@ class ClassementController extends Controller
             return redirect()->back()->with('error', 'Aucune année académique trouvée.');
         }
 
-        // Récupérer uniquement les demandes de la dernière année académique qui ne sont PAS classées
-        $demandes = Demande::whereHas('planification', function ($query) use ($latestAcademicYear) {
-            $query->where('annee_academique_id', $latestAcademicYear->id);
+         $demandes = Demande::whereHas('planification', function ($query) use ($latestAcademicYear) {
+         $query->where('annee_academique_id', $latestAcademicYear->id);
         })
-        ->whereDoesntHave('classement', function ($query) {
-            $query->whereColumn('demandes.code_suivi', 'classements.code_suivi');
-        }) // Exclure les demandes déjà classées
+        ->whereDoesntHave('classement')
         ->get();
+
 
         // Récupérer uniquement les cabines avec des places disponibles > 0
         $cabines = Cabine::where('places_disponibles', '>', 0)->get();
 
         return view('pages.classements.create', compact('demandes', 'cabines'));
     }
+
+
+public function libererCabinesNonValidees()
+{
+    $anneeAcademique = \App\Models\AnneeAcademique::latest()->first();
+
+    // Récupérer les classements non validés et encore validables de la dernière année académique
+    $classementsNonValides = \App\Models\Classement::where(function ($query) {
+            $query->whereNull('est_valide')
+                  ->orWhere('est_valide', '!=', 1);
+        })
+        ->where('peut_valider', '!=', 0) // ✅ Exclure ceux déjà désactivés
+        ->whereHas('demande.planification', function ($query) use ($anneeAcademique) {
+            $query->where('annee_academique_id', $anneeAcademique->id);
+        })
+        ->get();
+
+    $totalCabinesLiberees = 0;
+
+    foreach ($classementsNonValides as $classement) {
+        if ($classement->cabine) {
+            // Incrémenter les places disponibles
+            $classement->cabine->places_disponibles += 1;
+            $classement->cabine->save();
+
+            // Marquer comme non validable
+            $classement->peut_valider = false;
+            $classement->save();
+
+            $totalCabinesLiberees++;
+        }
+    }
+
+    return back()->with('success', "$totalCabinesLiberees cabines ont été libérées et les classements désactivés.");
+}
+
 
 
 
@@ -144,7 +237,7 @@ public function validateClassement($codeSuivi, Request $request)
     }
 
     $classement->est_valide = true;
-    $classement->caissiere_id = Auth::id(); // Enregistre l'utilisateur actuel 
+    $classement->caissiere_id = Auth::id(); // Enregistre l'utilisateur actuel
     $classement->save();
 
     return response()->json(['success' => true]);
