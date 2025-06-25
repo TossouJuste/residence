@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Cous-ac - Index</title> 
+  <title>Cous-ac - Index</title>
   <meta content="" name="Système de gestion des résidences universitaires">
   <meta content="" name="cousac, résidence, uac">
 
@@ -39,8 +39,8 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
     <div class="container text-center position-relative" data-aos="fade-in" data-aos-delay="200">
-      <h1>Demande de résidences en ligne</h1>
-      <h2>Suivre vos demandes et plainte a temps reel</h2>
+      <h1>Demande de logement universitaire en ligne</h1>
+      <h2>Suivi instantanné et efficace de vos demandes</h2>
       <a href="/demande" class="btn-get-started scrollto">faire une demande</a>
     </div>
   </section><!-- End Hero -->

@@ -21,23 +21,23 @@ class DemandeSeeder extends Seeder
             return;
         }
 
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 1000; $i++) {
             Demande::create([
                 'nom' => $faker->lastName,
                 'prenom' => $faker->firstName,
                 'telephone' => $faker->phoneNumber,
                 'email' => $faker->unique()->safeEmail,
-                'date_naissance' => $faker->date('Y-m-d', '2004-01-01'),
-                'lieu_naissance' => $faker->randomElement(['BOPA', 'ABOMEY CALAVI', 'POBE', 'SAVE'], 'ABOMEY', 'BOHICON', 'OUIDAH', 'COVE', 'N\'DALI', 'KETOU', 'PORTO-NOVO', 'SAKETE', 'SAXWE', 'TORI', 'ADJA', 'PARAKOU', 'GOGOUNOU', 'HEVIE'),
+                'date_naissance' => $faker->date('y-m-d', '2004-01-01'),
+                'lieu_naissance' => $faker->randomElement(['BOPA', 'ABOMEY CALAVI', 'POBE', 'SAVE', 'ABOMEY', 'BOHICON', 'OUIDAH', 'COVE', 'N\'DALI', 'KETOU', 'PORTO-NOVO', 'SAKETE', 'SAXWE', 'TORI', 'ADJA', 'PARAKOU', 'GOGOUNOU', 'HEVIE']),
                 'domicile' => $faker->address,
-                'etablissement' => $faker->randomElement(['IFRI', 'EPAC', 'INE', 'FASEG'], 'FASH', 'FLLAC', 'FADESP', 'FSA', 'ENA', 'ENEAM'),
-                'filiere' => $faker->word,
-                'annee_etude' => $faker->randomElement(['1ère année', '2ème année', '3ème année']),
-                'sexe' => $faker->randomElement(['M', 'F']),
-                'nationalite' => $faker->country,
-                'adresse_personnelle' => $faker->address,
+                'etablissement' => $faker->randomElement(['FASEG', 'FASH','IFRI', 'INE', 'FAST', 'FADESP']),
+                'filiere' => $faker->randomElement(['Génie Logiciel', 'Agronomie','Economie', 'Anglais', 'Espagnol', 'MIA']),
+                'annee_etude' => $faker->randomElement(['1','2','3']),
+                'sexe' => $faker->randomElement(['M','F']),
+                'nationalite' => $faker->randomElement(['Béninoise']),
+                'adresse_personnelle' => $faker->randomElement(['BOPA', 'ABOMEY CALAVI', 'POBE', 'SAVE', 'ABOMEY', 'BOHICON', 'OUIDAH', 'COVE', 'N\'DALI', 'KETOU', 'PORTO-NOVO', 'SAKETE', 'SAXWE', 'TORI', 'ADJA', 'PARAKOU', 'GOGOUNOU', 'HEVIE']),
                 'fiche_inscription' => 'fichiers/fiches_inscriptions/fake_file_' . uniqid() . '.png',
-                'adresse_residence_parents' => $faker->address,
+                'adresse_residence_parents' => $faker->randomElement(['BOPA', 'ABOMEY CALAVI', 'POBE', 'SAVE', 'ABOMEY', 'BOHICON', 'OUIDAH', 'COVE', 'N\'DALI', 'KETOU', 'PORTO-NOVO', 'SAKETE', 'SAXWE', 'TORI', 'ADJA', 'PARAKOU', 'GOGOUNOU', 'HEVIE']),
                 'statut_aide' => $faker->randomElement(['boursier', 'secouru', 'aucun']),
                 'ancien_resident' => $faker->boolean,
                 'batiments' => $faker->optional()->word,

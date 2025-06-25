@@ -15,6 +15,7 @@ use App\Http\Controllers\ClassementController;
 use App\Http\Controllers\CritereController;
 use App\Http\Controllers\PlanificationController;
 use App\Http\Controllers\AnneeAcademiqueController;
+use App\Http\Controllers\EtablissementController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -61,6 +62,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/{anneeAcademique}/edit', [AnneeAcademiqueController::class, 'edit'])->name('edit');
                 Route::put('/{anneeAcademique}', [AnneeAcademiqueController::class, 'update'])->name('update');
                 Route::delete('/{anneeAcademique}', [AnneeAcademiqueController::class, 'destroy'])->name('destroy');
+            });
+        });
+
+        Route::middleware(['intendant'])->group(function () {
+            Route::prefix('etablissements')->name('etablissements.')->group(function () {
+                Route::get('/', [EtablissementController::class, 'index'])->name('index');
+                Route::get('/create', [EtablissementController::class, 'create'])->name('create');
+                Route::post('/', [EtablissementController::class, 'store'])->name('store');
+                Route::get('/{etablissement}', [EtablissementController::class, 'show'])->name('show');
+                Route::get('/{etablissement}/edit', [EtablissementController::class, 'edit'])->name('edit');
+                Route::put('/{etablissement}', [EtablissementController::class, 'update'])->name('update');
+                Route::delete('/{etablissement}', [EtablissementController::class, 'destroy'])->name('destroy');
             });
         });
 
@@ -127,11 +140,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/', [DemandeResidenceController::class, 'index']);
 Route::get('/demande', [DemandeResidenceController::class, 'create'])->name('demandes.create');
+Route::get('/demande2', [DemandeResidenceController::class, 'create2'])->name('demandes2.create');
 Route::get('/demande/confirmation/{code_suivi}', [DemandeResidenceController::class, 'confirmation'])->name('demandes.confirmation');
 Route::post('/demande', [DemandeResidenceController::class, 'store'])->name('demandes.store');
 Route::get('/suivre', [DemandeResidenceController::class, 'suivre'])->name('suivre');
 Route::post('/suivi-demande', [DemandeResidenceController::class, 'suivreDemande'])->name('suivi.demande');
 Route::get('/suivi/demande/{code_suivi}', [DemandeResidenceController::class, 'afficherDemande'])->name('afficher.demande');
+Route::get('/demande/simple', [DemandeResidenceController::class, 'createSimple'])->name('demandes.create.simple');
+Route::post('/demande/simple', [DemandeResidenceController::class, 'storeSimple'])->name('demandes.store.simple');
 
 Route::get('/validation/{code_suivi}', [ValidationController::class, 'validation'])->name('validation');
 Route::get('/validation-quittance/{code_suivi}', [ValidationController::class, 'validerQuittance'])->name('validation.quittance');

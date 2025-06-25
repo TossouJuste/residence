@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -27,13 +27,13 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
- 
+
 </head>
 
 <body>
 
   <!-- ======= Header ======= -->
-  <?php 
+  <?php
     include('header.php');
   ?>
   <!-- End Header -->
@@ -47,7 +47,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>CONTACT</h2>
           <ol>
-            <li><a href="index.html">Accueil</a></li>
+            <li><a href="/">Accueil</a></li>
             <li>contact</li>
           </ol>
         </div>
@@ -61,12 +61,12 @@
 
         <div class="row gy-4">
 
-         
+
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100"> 
+          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
             <div class="row">
               <div class="col-lg-6 mt-4">
                 <div class="info">
@@ -113,7 +113,7 @@
     </section><!-- End Contact Section -->
 
 
-       
+
         </div>
 
       </div>

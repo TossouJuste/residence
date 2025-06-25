@@ -60,22 +60,22 @@
                             <th>Email</th>
                             <th>Sexe</th>
                             <th>Date Naissance</th>
-                            <th>Filière</th>
-                            <th>Boursier / secouru</th>
+                            <th>Etablissement</th>
+                            <th>Année acad</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($demandes as $demande)
                             <tr>
                                 <td>{{ $loop->iteration }}</td> <!-- Numérotation automatique -->
-                                <td>{{ $demande->nom }}</td>
-                                <td>{{ $demande->prenom }}</td>
-                                <td>{{ $demande->telephone }}</td>
-                                <td>{{ $demande->email }}</td>
-                                <td>{{ $demande->sexe }}</td>
-                                <td>{{ $demande->date_naissance }}</td>
-                                <td>{{ $demande->filiere }}</td>
-                                <td>{{ ucfirst($demande->statut_aide) }}</td>
+                                <td>{{ $demande->etudiant->nom }}</td>
+                                <td>{{ $demande->etudiant->prenom }}</td>
+                                <td>{{ $demande->etudiant->telephone }}</td>
+                                <td>{{ $demande->etudiant->email }}</td>
+                                <td>{{ $demande->etudiant->sexe }}</td>
+                               <td>{{ $demande->etudiant->date_naissance->format('d/m/Y') }}</td>
+                                <td>{{ $demande->etablissement->nom }}</td>
+                                <td>{{ ucfirst($demande->annee_etude) }}</td>
                             </tr>
                         @empty
                             <tr>

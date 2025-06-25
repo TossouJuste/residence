@@ -36,7 +36,7 @@
 			<div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
 				<span class="symbol-label bg-primary text-inverse-primary fw-bold">E</span>
 			</div>
-			<a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
+			<a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#">
 				<span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
 			</a>
 		</div>

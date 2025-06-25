@@ -24,7 +24,7 @@
                     class="menu-item menu-accordion {{ request()->routeIs('user-management.*') ? 'here show' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon"><i class="fas fa-users-cog fs-2"></i></span>
-                        <span class="menu-title">Utilisateurs et rôles</span>
+                        <span class="menu-title">Utilisateurs</span>
                         <span class="menu-arrow"></span>
                     </span>
                     <div class="menu-sub menu-sub-accordion">
@@ -34,7 +34,7 @@
                                 <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
                                 <span class="menu-title">Utilisateurs</span>
                             </a>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             @endif

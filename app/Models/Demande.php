@@ -12,33 +12,43 @@ class Demande extends Model
     protected $table = 'demandes';
 
     protected $fillable = [
-        'planification_id', // Ajout de la clé étrangère
-        'nom', 'prenom', 'telephone', 'email', 'date_naissance',
-        'lieu_naissance', 'domicile', 'etablissement', 'filiere',
-        'annee_etude', 'fiche_inscription', 'sexe', 'nationalite', 'adresse_personnelle',
-        'statut_aide', 'salarie', 'ancien_resident', 'batiments',
-        'redoublant', 'adresse_residence_parents', 'handicap',
-        'type_handicap', 'certificat_handicap', 'code_suivi', 'statut'
+        'code_suivi',
+        'statut_demande',
+        'annee_etude',
+        'filiere',
+        'fiche_preinscription',
+        'etudiant_matricule',
+        'etablissement_id',
+        'planification_id',
     ];
 
-    // Casting des champs boolean pour éviter les erreurs
-    protected $casts = [ 
-        'salarie' => 'boolean',
-        'ancien_resident' => 'boolean',
-        'redoublant' => 'boolean',
-        'handicap' => 'boolean',
-    ];
 
-    // Relation avec Planification
+    /**
+     * Une demande appartient à un étudiant.
+     */
+    public function etudiant()
+    {
+        return $this->belongsTo(Etudiant::class, 'etudiant_matricule', 'matricule');
+    }
+
+    /**
+     * Une demande appartient à un établissement.
+     */
+    public function etablissement()
+    {
+        return $this->belongsTo(Etablissement::class);
+    }
+
+    /**
+     * Une demande appartient à une planification.
+     */
     public function planification()
     {
         return $this->belongsTo(Planification::class);
     }
 
-    // Relation avec Classement (une demande acceptée peut être classée)
     public function classement()
     {
         return $this->hasOne(Classement::class, 'code_suivi', 'code_suivi');
     }
-
 }

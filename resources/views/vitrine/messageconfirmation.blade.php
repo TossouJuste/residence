@@ -69,7 +69,7 @@
                     <div class="alert alert-success" role="alert">
                         <h4>Demande soumise avec succès !</h4>
                         <p>Votre code de suivi est : <strong>{{ $code_suivi }}</strong></p>
-                        <b>Ce code vous servira toute la procédure de demande de résidence donc ne le perdez surtout pas</b>
+                        <b>Ce code vous accompagnera tout au long de la procédure de demande de résidence, veuillez donc le conserver précieusement.</b>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -28,13 +28,13 @@
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('assets/css2/style.css') }}" rel="stylesheet">
- 
+
 </head>
 
 <body>
 
-  <!-- ======= Header ======= --> 
-    @include('vitrine.header'); 
+  <!-- ======= Header ======= -->
+    @include('vitrine.header');
   <!-- End Header -->
 
   <main id="main">
@@ -46,7 +46,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>CONFIRMATION AU CHEF CITE</h2>
           <ol>
-            <li><a href="index.php">ACCUEIL</a></li>
+            <li><a href="/">ACCUEIL</a></li>
             <li>Confirmation au chef cité</li>
           </ol>
         </div>
@@ -60,13 +60,13 @@
 
         <div class="row gy-4">
 
-         
+
     <!-- ======= formulaire Section ======= -->
     <section id="contact" class="contact">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100"> 
-            
+          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+
             @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -79,27 +79,27 @@
                 </div>
             @endif
 
-            
+
             <form action="{{ route('submit.recu', ['code_suivi' => $classement->code_suivi]) }}" method="post" role="form" class="php-email-form mt-4" enctype="multipart/form-data">
                 @csrf
                 <h3 class="d-flex justify-content-center">Information personnelle et de réçu </h3> <br>
                 <div class="row">
                     <div class="col-md-12 form-group">
                         <input type="text" name="numero_recu_loyer" class="form-control" id="numrecu" placeholder="Numéro du réçu du loyer" required>
-                    </div> 
+                    </div>
                     <div class="col-md-12 form-group">
                         <label for="file">Envoyez une photo du reçu du loyer</label>
                         <input type="file" name="photo_recu_loyer" class="form-control" id="file" required>
-                    </div> 
+                    </div>
                     <div class="col-md-12 form-group">
                         <label for="file2">Envoyez votre photo d'identité</label> <br>
                         <input type="file" name="photo_identite" class="form-control" id="file2" required>
                     </div>
                     <p>NB : Le reçu du loyer fait partie des documents à remettre avant d'accéder à la cabine.</p>
-                </div>   
+                </div>
                 <div class="text-center"><button type="submit">Soumettre</button></div>
             </form>
-            
+
           </div>
         </div>
 
@@ -107,7 +107,7 @@
     </section><!-- End formulaire Section -->
 
 
-       
+
         </div>
 
       </div>

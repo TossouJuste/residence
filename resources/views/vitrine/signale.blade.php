@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -27,13 +27,13 @@
 
   <!-- Template Main CSS File -->
   <link href="assets/css/style.css" rel="stylesheet">
- 
+
 </head>
 
 <body>
 
   <!-- ======= Header ======= -->
-  <?php 
+  <?php
     include('header.php');
   ?>
   <!-- End Header -->
@@ -61,20 +61,20 @@
 
         <div class="row gy-4">
 
-         
+
     <!-- ======= formulaire Section ======= -->
     <section id="contact" class="contact">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100"> 
-            
+          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+
             <form action="forms/contact.php" method="post" role="form" class="php-email-form mt-4">
             <h3 class="d-flex justify-content-center">Saisie votre code de suivi</h3> <br>
               <div class="row">
                 <div class="col-md-12 form-group">
                   <input type="text" name="code_suivi" class="form-control" id="name" placeholder="Votre code de suivi" required>
                 </div>
-              </div>   
+              </div>
               <div class="text-center"><button type="submit">Vérifier</button></div>
             </form>
           </div>
@@ -84,7 +84,7 @@
     </section><!-- End formulaire Section -->
 
 
-       
+
         </div>
 
       </div>

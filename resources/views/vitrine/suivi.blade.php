@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
@@ -46,7 +46,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>SUIVRE UNE DEMANDE</h2>
           <ol>
-            <li><a href="index.php">ACCUEIL</a></li>
+            <li><a href="/">ACCUEIL</a></li>
             <li>Suivre une demande</li>
           </ol>
         </div>

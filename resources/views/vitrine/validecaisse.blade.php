@@ -1,135 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
+   function lancerClassement()
+    {
+        DB::transaction(function () {
+           // 🔹 Récupérer la dernière planification avec description "Lancement d'inscription"
+            $planification = Planification::where('description', 'Lancement d\'inscription')
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+            if (!$planification) {
+            throw new \Exception("Aucune planification d'inscription trouvée.");
+            }
 
-  <title>Validation à  la caisse</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+            // 🔹 Vérifier que la planification appartient à la dernière année académique
+            $anneeAcademique = AnneeAcademique::orderBy('id', 'desc')->first(); // ou 'created_at' selon le modèle
 
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+            if (!$anneeAcademique) {
+            throw new \Exception("Aucune année académique trouvée.");
+            }
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+            // 🔹 Récupérer les demandes éligibles (pas encore classées), sans handicap et liées à l'année académique courante
+            $demandes = Demande::where('planification_id', $planification->id)
+            ->whereHas('planification', function ($query) use ($anneeAcademique) {
+             $query->where('annee_academique_id', $anneeAcademique->id);
+            })
+            ->where('handicap', false) // Supposons que ce champ indique la situation de handicap (booléen)
+            ->whereDoesntHave('classement') // Exclure celles déjà classées
+            ->get();
 
-<!-- Inclure les fichiers CSS dans votre fichier Blade -->
-<link href="{{ asset('assets/vendor2/aos/aos.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor2/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor2/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor2/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor2/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor2/remixicon/remixicon.css') }}" rel="stylesheet">
-<link href="{{ asset('assets/vendor2/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
+            if ($demandes->isEmpty()) {
+            throw new \Exception("Aucune demande éligible trouvée.");
+            }
 
+            // 🔹 Calculer le score pour chaque demande
+            $demandes = $demandes->map(function ($demande) {
+                $score = 0;
 
-  <!-- Template Main CSS File -->
-  <link href="{{ asset('assets/css2/style.css') }}" rel="stylesheet">
-</head>
+                // Critère 1 : Âge (plus jeune = meilleur score)
+                $age = now()->diffInYears($demande->date_naissance);
+                $score += (100 - $age); // Moins on est âgé, plus le score est élevé.
 
-<body>
+                // Critère 2 : Ancienneté en cabine
+                if ($demande->ancien_resident) {
+                    $score -= 20; // Malus si déjà résident.
+                }
 
-  <!-- ======= Header ======= -->
-  
-    @include('vitrine.header');
+                // Critère 3 : Statut financier
+                if ($demande->boursier || $demande->secouru) {
+                    $score += 20; // Bonus pour étudiants en difficulté financière.
+                } elseif ($demande->salarie) {
+                    $score -= 50; // Malus pour les salariés.
+                }
 
-  <!-- End Header -->
+                // Critère 4 : Redoublement
+                if ($demande->redoublant) {
+                    $score -= 20; // Malus si redoublant.
+                }
 
-  <main id="main">
+                // Sauvegarde du score temporaire (non en BDD)
+                $demande->score = $score;
+                return $demande;
+            });
 
-    <!-- ======= Breadcrumbs ======= -->
-    <section id="breadcrumbs" class="breadcrumbs">
-      <div class="container">
+            // 🔹 Trier les demandes par score décroissant
+            $demandes = $demandes->sortByDesc('score');
 
-        <div class="d-flex justify-content-between align-items-center">
-          <h2>VALIDATION A LA CAISSE</h2>
-          <ol>
-            <li><a href="index.php">ACCUEIL</a></li>
-            <li>Validation à la caisse</li>
-          </ol>
-        </div>
+            // 🔹 Récupérer les cabines disponibles
+            $cabines = Cabine::where('places_disponibles', '>', 0)->with('batiment')->get();
 
-      </div>
-    </section><!-- End Breadcrumbs -->
+            if ($cabines->isEmpty()) {
+                throw new \Exception("Aucune cabine disponible.");
+            }
 
-    <!-- ======= Portfolio Details Section ======= -->
-    <section id="portfolio-details" class="portfolio-details">
-      <div class="container">
+            // 🔹 Répartition des cabines
+            foreach ($demandes as $demande) {
+                // Trouver une cabine du même sexe
+                $cabineAttribuee = $cabines->first(function ($cabine) use ($demande) {
+                    return $cabine->batiment->sexe === $demande->sexe && $cabine->places_disponibles > 0;
+                });
 
-        <div class="row gy-4">
+                if ($cabineAttribuee) {
+                    // 🔹 Créer le classement
+                    Classement::create([
+                        'code_suivi' => $demande->code_suivi,
+                        'cabine_id' => $cabineAttribuee->id,
+                        'est_valide' => false, // Non validé par défaut
+                        'caissiere_id' => null
+                    ]);
 
-         
-    <!-- ======= formulaire Section ======= -->
-    <section id="contact" class="contact">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100"> 
+                    // 🔹 Décrémenter les places disponibles
+                    $cabineAttribuee->decrement('places_disponibles');
 
-            @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
+                    // 🔹 Supprimer cette cabine si pleine
+                    if ($cabineAttribuee->places_disponibles <= 0) {
+                        $cabines = $cabines->reject(fn($c) => $c->id === $cabineAttribuee->id);
+                    }
+                }
+            }
+        });
 
-            @if(session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
- 
-
-            <form action="{{ route('submit.quittance', ['code_suivi' => $classement->code_suivi]) }}" method="post" enctype="multipart/form-data" role="form" class="php-email-form mt-4">
-                @csrf <!-- Protection CSRF -->
-                <h3 class="d-flex justify-content-center">Information de la quittance</h3> <br>
-                <div class="row">
-                    <div class="col-md-12 form-group">
-                        <input type="text" name="code_quittance" class="form-control" placeholder="Numéro de la quittance" required>
-                    </div>
-                    <div class="col-md-12 form-group">
-                        <label for="file">Envoyez une photo de la quittance</label> <br>
-                        <input type="file" name="photo_quittance" class="form-control" required>
-                    </div>
-                    <p>NB : Après soumission, rendez-vous à la caisse pour obtenir les reçus et continuer les étapes.</p>
-                </div>   
-                <div class="text-center">
-                    <button type="submit">Soumettre</button>
-                </div>
-            </form>
-            
-            
-          </div>
-        </div>
-     
-      </div>
-    </section><!-- End formulaire Section -->
-
-
-       
-        </div>
-
-      </div>
-    </section><!-- End Portfolio Details Section -->
-
-  </main><!-- End #main -->
-
-
-
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
- <!-- Vendor JS Files -->
- <script src="{{ asset('assets/vendor2/purecounter/purecounter_vanilla.js') }}"></script>
- <script src="{{ asset('assets/vendor2/aos/aos.js') }}"></script>
- <script src="{{ asset('assets/vendor2/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
- <script src="{{ asset('assets/vendor2/glightbox/js/glightbox.min.js') }}"></script>
- <script src="{{ asset('assets/vendor2/isotope-layout/isotope.pkgd.min.js') }}"></script>
- <script src="{{ asset('assets/vendor2/swiper/swiper-bundle.min.js') }}"></script>
- 
- <!-- Template Main JS File -->
- <script src="{{ asset('assets/js2/main.js') }}"></script>
-
-</body>
-
-</html>
+        return redirect()->route('classements.index')->with('success', 'Répartition faite avec succès.');
+    }

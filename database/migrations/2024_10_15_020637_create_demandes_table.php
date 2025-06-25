@@ -9,39 +9,32 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('demandes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('planification_id')->constrained('planifications')->onDelete('restrict'); // Ajout de la relation
-            $table->string('nom');
-            $table->string('prenom');
-            $table->string('telephone');
-            $table->string('email');
-            $table->date('date_naissance');
-            $table->string('lieu_naissance');
-            $table->string('domicile');
-            $table->string('etablissement');
-            $table->string('filiere');
-            $table->string('annee_etude');
-            $table->string('fiche_inscription');
-            $table->enum('sexe', ['M', 'F']);
-            $table->string('nationalite');
-            $table->string('adresse_personnelle');
-            $table->string('statut_aide');
-            $table->boolean('salarie')->default(false);
-            $table->boolean('ancien_resident')->default(false);
-            $table->string('batiments')->nullable();
-            $table->boolean('redoublant')->default(false);
-            $table->string('adresse_residence_parents');
-            $table->boolean('handicap')->default(false);
-            $table->string('type_handicap')->nullable();
-            $table->string('certificat_handicap')->nullable();
-            $table->string('code_suivi')->unique();
-            $table->enum('statut', ['En cours de traitement', 'Vous avez été classé'])->default('En cours de traitement'); // Correction ici
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('demandes', function (Blueprint $table) {
+        $table->id();
+        $table->string('code_suivi')->unique();
+        $table->enum('statut', ['En cours de traitement', 'Vous avez été classé'])->default('En cours de traitement'); // Correction ici
+        $table->string('annee_etude');
+        $table->string('filiere');
+        $table->string('fiche_preinscription')->nullable(); // fichier uploadé
+
+        // Relations
+        $table->string('etudiant_matricule'); // FK vers etudiants
+        $table->foreign('etudiant_matricule')->references('matricule')->on('etudiants')->onDelete('cascade');
+
+        $table->unsignedBigInteger('etablissement_id');
+        $table->foreign('etablissement_id')->references('id')->on('etablissements')->onDelete('cascade');
+
+        $table->unsignedBigInteger('planification_id');
+        $table->foreign('planification_id')->references('id')->on('planifications')->onDelete('cascade');
+
+        $table->timestamps();
+
+        // Contrainte : une seule demande par planification pour un même étudiant
+        $table->unique(['etudiant_matricule', 'planification_id']);
+    });
+}
 
     /**
      * Reverse the migrations.

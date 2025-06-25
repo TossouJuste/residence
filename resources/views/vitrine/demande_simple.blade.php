@@ -45,8 +45,8 @@
 
     <section class="portfolio-details">
       <div class="container">
-        <h2 class="text-center my-4">Formulaire de demande de logement étudiant</h2>
-        <p class="text-center center my-4"><a href="/demande/simple">Avez-vous soumis une demande auparavant ? </a></p>
+        <h2 class="text-center my-4">Formulaire de demande simplifiée</h2>
+        <p class="text-center center my-4"><a href="/demande">Est-ce la première fois vous faites une demande ? </a></p>
         @if(session('error'))
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Attention !</strong> {{ session('error') }}
@@ -64,74 +64,33 @@
         @endif
 
         @if ($planification)
-          <form action="{{ route('demandes.store') }}" method="POST" enctype="multipart/form-data" class="php-email-form mt-4">
+          <form action="{{ route('demandes.store.simple') }}" method="POST" enctype="multipart/form-data" class="php-email-form mt-4">
             @csrf
 
             <div class="row">
               <div class="col-md-6 form-group mb-3">
                 <label for="matricule">Matricule <span class="text-danger">*</span></label>
-                <input type="text" name="matricule" id="matricule" class="form-control"  required />
+                <input type="text" name="matricule" id="matricule" class="form-control" required />
               </div>
               <div class="col-md-6 form-group mb-3">
-                <label for="nom">Nom <span class="text-danger">*</span></label>
-                <input type="text" name="nom" id="nom" class="form-control"  required />
+                <label for="etablissement_id">Établissement <span class="text-danger">*</span></label>
+                <select name="etablissement_id" id="etablissement_id" class="form-control" required>
+                  <option value="" disabled selected>Choisissez votre établissement</option>
+                  @foreach ($etablissements as $etablissement)
+                    <option value="{{ $etablissement->id }}">
+                      {{ $etablissement->nom }}
+                    </option>
+                  @endforeach
+                </select>
               </div>
             </div>
 
             <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label for="prenom">Prénom <span class="text-danger">*</span></label>
-                <input type="text" name="prenom" id="prenom" class="form-control" required />
-              </div>
-              <div class="col-md-6 form-group mb-3">
-                <label for="telephone">Téléphone <span class="text-danger">*</span></label>
-                <input type="tel" name="telephone" id="telephone" class="form-control"  required />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label for="email">Email <span class="text-danger">*</span></label>
-                <input type="email" name="email" id="email" class="form-control"  required />
-              </div>
-              <div class="col-md-6 form-group mb-3">
-                <label for="date_naissance">Date de naissance <span class="text-danger">*</span></label>
-                <input type="date" name="date_naissance" id="date_naissance" class="form-control" required />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label for="lieu_naissance">Lieu de naissance <span class="text-danger">*</span></label>
-                <input type="text" name="lieu_naissance" id="lieu_naissance" class="form-control"  required />
-              </div>
-              <div class="col-md-6 form-group mb-3">
-                <label for="adresse_personnelle">Adresse personnelle <span class="text-danger">*</span></label>
-                <input type="text" name="adresse_personnelle" id="adresse_personnelle" class="form-control" required />
-              </div>
-            </div>
-
-            <div class="row">
-             <div class="col-md-6 form-group mb-3">
-                    <label for="etablissement_id">Établissement <span class="text-danger">*</span></label>
-                    <select name="etablissement_id" id="etablissement_id" class="form-control" required>
-                        <option value="" disabled selected>Choisissez votre établissement</option>
-                        @foreach ($etablissements as $etablissement)
-                            <option value="{{ $etablissement->id }}">
-                                {{ $etablissement->nom }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
               <div class="col-md-6 form-group mb-3">
                 <label for="filiere">Filière <span class="text-danger">*</span></label>
-                <input type="text" name="filiere" id="filiere" class="form-control"  required />
+                <input type="text" name="filiere" id="filiere" class="form-control" required />
               </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
+               <div class="col-md-6 form-group mb-3">
                 <label for="annee_etude">Année d'étude <span class="text-danger">*</span></label>
                 <select name="annee_etude" id="annee_etude" class="form-control" required>
                   <option value="" disabled selected>Choisissez votre année d'étude</option>
@@ -139,49 +98,15 @@
                   <option value="2">2ème année</option>
                   <option value="3">3ème année</option>
                 </select>
-               </div>
-                <div class="col-md-6 form-group mb-3">
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 form-group mb-3">
                     <label for="fiche_inscription">
                     Fiche de pré inscription validée ou non de l'année en cours <span class="text-danger">*</span>
                     </label>
                     <input type="file" name="fiche_inscription" id="fiche_inscription" class="form-control" required />
                 </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label for="sexe">Sexe <span class="text-danger">*</span></label>
-                <select name="sexe" id="sexe" class="form-control" required>
-                  <option value="" disabled selected>Choisissez le sexe</option>
-                  <option value="M">Masculin</option>
-                  <option value="F">Féminin</option>
-                </select>
-              </div>
-              <div class="col-md-6 form-group mb-3">
-                <label for="nationalite">Nationalité <span class="text-danger">*</span></label>
-                <input type="text" name="nationalite" id="nationalite" class="form-control" required />
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label>Êtes-vous en situation d'handicap ? <span class="text-danger">*</span></label><br />
-                <input type="radio" name="handicap" value="1" id="handicap_oui" required />
-                <label for="handicap_oui">Oui</label>
-                <input type="radio" name="handicap" value="0" id="handicap_non" required />
-                <label for="handicap_non">Non</label>
-              </div>
-            </div>
-
-            <div class="row" id="handicap_fields" style="display:none;">
-              <div class="col-md-12 form-group mb-3">
-                <label for="type_handicap">Si oui, précisez le type de handicap (moteur, visuel, autre)</label>
-                <input type="text" name="type_handicap" id="type_handicap" class="form-control" />
-              </div>
-              <div class="col-md-12 form-group mb-3">
-                <label for="certificat_handicap">Certificat de handicap (délivré par un médecin du COUS-AC)</label>
-                <input type="file" name="certificat_handicap" id="certificat_handicap" class="form-control" />
-              </div>
             </div>
 
             <div class="form-group mb-3">
@@ -209,8 +134,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-
-      // Handicap fields
       const radioHandicapOui = document.getElementById('handicap_oui');
       const radioHandicapNon = document.getElementById('handicap_non');
       const handicapFields = document.getElementById('handicap_fields');
@@ -223,8 +146,10 @@
         }
       }
 
-      radioHandicapOui.addEventListener('change', toggleHandicapFields);
-      radioHandicapNon.addEventListener('change', toggleHandicapFields);
+      if (radioHandicapOui && radioHandicapNon) {
+        radioHandicapOui.addEventListener('change', toggleHandicapFields);
+        radioHandicapNon.addEventListener('change', toggleHandicapFields);
+      }
     });
   </script>
 

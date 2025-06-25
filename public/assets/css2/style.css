@@ -1,10 +1,4 @@
-/**
-* Template Name: Bethany
-* Updated: May 30 2023 with Bootstrap v5.3.0
-* Template URL: https://bootstrapmade.com/bethany-free-onepage-bootstrap-theme/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
+
 
 /*--------------------------------------------------------------
 # General
@@ -36,6 +30,7 @@ h6 {
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
+
 .back-to-top {
   position: fixed;
   visibility: hidden;
@@ -97,8 +92,7 @@ h6 {
 
 #header .logo {
   overflow: hidden;
-  padding: 16px 30px 12px 30px;
-  background: #009970;
+  padding: 0;
 }
 
 #header .logo h1 {
@@ -118,7 +112,7 @@ h6 {
 #header .logo img {
   padding: 0;
   margin: 0;
-  max-height: 40px;
+  max-height: 70px;
 }
 
 @media (max-width: 992px) {
@@ -146,7 +140,7 @@ h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /**
-* Desktop Navigation 
+* Desktop Navigation
 */
 .navbar {
   padding: 0;
@@ -275,7 +269,7 @@ h6 {
 }
 
 /**
-* Mobile Navigation 
+* Mobile Navigation
 */
 .mobile-nav-toggle {
   color: #fff;
@@ -382,10 +376,27 @@ h6 {
 /*--------------------------------------------------------------
 # Hero Section
 --------------------------------------------------------------*/
+
+/* Pour tous les champs focus (input, select, textarea) */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  outline: none;
+}
+
+/* Pour les options sélectionnées dans les menus déroulants */
+ 
+/* Pour les options survolées */
+select option:hover {
+  background-color: #c3e6cb;
+}
+
 #hero {
   width: 100%;
-  height: 80vh;
-  background: url("../img2/her.jpg") center center;
+  height: 100vh;
+  background: url("../media/logos/plan.jpg") center center;
   background-size: cover;
   position: relative;
 }

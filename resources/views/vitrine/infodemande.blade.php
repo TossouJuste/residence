@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Portfolio Details - Bethany Bootstrap Template</title>
+  <title>Suivi de demande</title>
   <meta content="" name="Système de gestion des résidences universitaires">
   <meta content="" name="cousac, résidence, uac">
 
-  <!-- Favicons -->
+   <!-- Favicons -->
   <link href="assets/media/logos/logo-cousac.jpeg" rel="icon">
   <link href="assets/media/logos/logo-cousac.jpeg" rel="cous-ac">
 
@@ -49,8 +49,8 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>PAGE DE SUIVI</h2>
           <ol>
-            <li><a href="index.php">ACCUEIL</a></li>
-            <li>Suivre une demande</li>
+            <li><a href="/">ACCUEIL</a></li>
+            <li>Suivi de demande</li>
           </ol>
         </div>
 
@@ -64,70 +64,107 @@
         <div class="row gy-4">
 
 
-   <!-- ======= formulaire Section ======= -->
+<!-- ======= formulaire Section ======= -->
 <section id="contact" class="contact">
-    <div class="container">
-        <div class="row">
-            <div class="container">
-                <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+  <div class="container">
+    <div class="row">
+      <div class="container">
+        <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
 
-                    <h5 class="d-flex justify-content-center">Information personnelle :</h5> <br>
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-                            <p><strong>Nom & Prénoms :</strong> {{ $demande->nom ?? 'Non disponible' }} {{ $classement->demande->prenom ?? '' }}</p>
-                            <p><strong>Année d'étude et filière :</strong> {{ $demande->annee_etude ?? 'Non disponible'}}<sup>e</sup> année  {{ $demande->filiere ?? '' }}</p>
-                            <p><strong>École :</strong> {{ $demande->etablissement ?? 'Non disponible' }}</p>
-                        </div>
-                    </div>
+          <h5 class="d-flex justify-content-center">Informations personnelles :</h5><br>
+          <table class="table table-bordered w-100 table-striped">
+            <tbody>
+              <tr>
+                <td>Nom & Prénoms </td>
+                <td>{{ $demande->nom ?? 'Non disponible' }} {{ $demande->prenom ?? '' }}</td>
+              </tr>
+              <tr>
+                <td>Année d'étude et filière </td>
+                <td>{{ $demande->annee_etude ?? 'Non disponible'}} {{ $demande->filiere ?? '' }}</td>
+              </tr>
+              <tr>
+                <td>École </td>
+                <td>{{ $demande->etablissement ?? 'Non disponible' }}</td>
+              </tr>
+            </tbody>
+          </table>
 
-                    <h5 class="d-flex justify-content-center">Statut de votre demande :</h5> <br>
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-                            <p>{{ $message }}</p>
-                        </div>
-                    </div>
+<h5 class="d-flex justify-content-center">Statut de votre demande :</h5><br>
+<table class="table table-bordered w-100">
+  <tbody>
+    <tr>
+      <td colspan="2"
+          @php
+              $bgClass = 'bg-light'; // couleur par défaut
+              if ($message === 'Demande en cours de traitement.') {
+                  $bgClass = 'table-warning text-dark';
+              } elseif ($message === 'Félicitations ! Vous avez été retenu.') {
+                  $bgClass = 'table-success text-dark';
+              } elseif ($message === 'Désolé, vous n’avez pas été retenu.') {
+                  $bgClass = 'table-danger text-dark';
+              }
+          @endphp
+          class="{{ $bgClass }}">
+          {{ $message }}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-                            <!-- Vérifier si la demande a bien été classée -->
-                            @if(isset($classement))
-                                <h4 class="d-flex justify-content-center">Information de votre classement :</h4> <br>
-                                <p><strong>Cité :</strong> {{ $classement->cabine->batiment->city->nom ?? 'Cité non trouvée' }}</p>
-                                <p><strong>Bâtiment :</strong> {{ $classement->cabine->batiment->nom ?? 'Bâtiment non trouvé' }}</p>
-                                <p><strong>Cabine :</strong> {{ $classement->cabine->code ?? 'Cabine non trouvée' }}</p>
 
-                                <p><strong>Délais de validation de la cabine :</strong> du 05 novembre au 15 novembre</p>
 
-                                <p><strong>Frais de résidences :</strong></p>
-                                <ol>
-                                    <li>
-                                        Si première vague :
-                                        <ul>
-                                            <li>Loyer 2500F x 9 mois + caution 5000F = <strong>27 500F</strong></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        Si deuxième vague :
-                                        <ul>
-                                            <li>Loyer 2500F x 7 mois + caution 5000F = <strong>22 500F</strong></li>
-                                        </ul>
-                                    </li>
-                                </ol>
 
-                                <p><strong>Adresse de paiement - Ecobank :</strong> N° 110066174001 intitulé ‹‹ COUS-AC ressources propres »</p>
+          @if(isset($classement))
+          <h4 class="d-flex justify-content-center">Information de votre classement :</h4><br>
+          <table class="table table-bordered w-100">
+            <tbody>
+              <tr>
+                <td><strong>Cité :</strong></td>
+                <td>{{ $classement->cabine->batiment->city->nom ?? 'Cité non trouvée' }}</td>
+              </tr>
+              <tr>
+                <td><strong>Bâtiment :</strong></td>
+                <td>{{ $classement->cabine->batiment->nom ?? 'Bâtiment non trouvé' }}</td>
+              </tr>
+              <tr>
+                <td><strong>Cabine :</strong></td>
+                <td>{{ $classement->cabine->code ?? 'Cabine non trouvée' }}</td>
+              </tr>
+              <tr>
+                <td><strong>Délais de validation :</strong></td>
+                <td>du 05 novembre au 15 novembre</td>
+              </tr>
+              <tr>
+                <td><strong>Frais de résidences :</strong></td>
+                <td>
+                  <ul>
+                    <li>Si première vague : Loyer 2500F x 9 mois + caution 5000F = <strong>27 500F</strong></li>
+                    <li>Si deuxième vague : Loyer 2500F x 7 mois + caution 5000F = <strong>22 500F</strong></li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Adresse de paiement :</strong></td>
+                <td>Ecobank N° 110066174001 intitulé ‹‹ COUS-AC ressources propres ››</td>
+              </tr>
+            </tbody>
+          </table>
+          @endif
 
-                                <p><strong>Étapes et critères de validation de votre cabine :</strong>
-                                    <a href="{{ route('validation', ['code_suivi' => $classement->demande->code_suivi]) }}" class="btn btn-primary">Validation</a>
-                                </p>
-                            @endif
-                        </div>
-                    </div>
-
-                </div>
-            </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
+<!-- End formulaire Section -->
+
+
+<style>
+  .table.borderless td, .table.borderless th {
+    border: none !important;
+  }
+</style>
+
 <!-- End formulaire Section -->
 
 

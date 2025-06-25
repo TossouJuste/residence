@@ -90,7 +90,7 @@
                         <tr>
                             <th>Code Suivi</th>
                             <th>Nom & Prénom</th>
-                             <th>Année de <br> naissance</th>
+                             <th>Date de <br> naissance</th>
                              <th>Sexe</th>
                             <th>Cabine</th>
                             <th>Bâtiment</th>
@@ -106,7 +106,11 @@
                                 <tr id="classement-{{ $classement->code_suivi }}">
                                 <td>{{ $classement->code_suivi }}</td>
                                 <td>{{ $classement->demande->nom ?? 'N/A' }} {{ $classement->demande->prenom ?? 'N/A' }}</td>
-                                <td>{{ $classement->demande->date_naissance ?? 'N/A' }}</td>
+                               <td>
+                                {{ $classement->demande?->date_naissance
+                                    ? \Carbon\Carbon::parse($classement->demande->date_naissance)->format('d/m/Y')
+                                    : 'N/A' }}
+                                </td> 
                                 <td>{{ $classement->demande->sexe ?? 'N/A' }}</td>
                                 <td>{{ $classement->cabine->code ?? 'N/A' }}</td>
                                 <td>{{ $classement->cabine->batiment->nom ?? 'N/A' }}-{{ $classement->cabine->batiment->city->nom ?? 'N/A' }}</td>
