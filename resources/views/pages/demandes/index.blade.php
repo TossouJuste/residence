@@ -50,38 +50,46 @@
 
 
             <div class="table-responsive">
-                <table class="table table-striped table-bordered">
+               <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Fiche</th>
+                            <th>Matricule</th>
                             <th>Nom</th>
-                            <th>Prénom</th>
                             <th>Téléphone</th>
                             <th>Email</th>
                             <th>Sexe</th>
                             <th>Date Naissance</th>
                             <th>Etablissement</th>
-                            <th>Année acad</th>
+                            <th>Année d'étude</th>
                         </tr>
                     </thead>
+
+                    <tbody>
                     <tbody>
                         @forelse($demandes as $demande)
                             <tr>
-                                <td>{{ $loop->iteration }}</td> <!-- Numérotation automatique -->
-                                <td>{{ $demande->etudiant->nom }}</td>
-                                <td>{{ $demande->etudiant->prenom }}</td>
+                                <td>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#ficheModal{{ $demande->id }}">
+                                        Voir fiche
+                                    </a>
+                                </td>
+                                <td>{{ $demande->etudiant_matricule }}</td>
+                                <td>{{ $demande->etudiant->nom }} {{ $demande->etudiant->prenom }}</td>
                                 <td>{{ $demande->etudiant->telephone }}</td>
                                 <td>{{ $demande->etudiant->email }}</td>
                                 <td>{{ $demande->etudiant->sexe }}</td>
-                               <td>{{ $demande->etudiant->date_naissance->format('d/m/Y') }}</td>
+                                <td>{{ $demande->etudiant->date_naissance->format('d/m/Y') }}</td>
                                 <td>{{ $demande->etablissement->nom }}</td>
-                                <td>{{ ucfirst($demande->annee_etude) }}</td>
+                                <td>{{ ucfirst($demande->annee_etude) }}<sup>e</sup> année</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center">Aucune demande trouvée pour l'année </td>
+                                <td colspan="9" class="text-center">Aucune demande trouvée pour l'année</td>
                             </tr>
                         @endforelse
+                    </tbody>
+
                     </tbody>
                 </table>
             </div>
@@ -102,12 +110,38 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="btn-lancer-confirm">Lancer</button>
+                    <button type="button" class="btn btn-success" id="btn-lancer-confirm">Lancer</button>
                 </div>
             </div>
         </div>
     </div>
 
+             @foreach($demandes as $demande)
+                <div class="modal fade" id="ficheModal{{ $demande->id }}" tabindex="-1" aria-labelledby="ficheModalLabel{{ $demande->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-xl modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="ficheModalLabel{{ $demande->id }}">Fiche de préinscription</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                      </div>
+                      <div class="modal-body text-center">
+                        @php
+                          $path = asset('storage/' . $demande->fiche_preinscription);
+                          $extension = pathinfo($path, PATHINFO_EXTENSION);
+                        @endphp
+
+                        @if(in_array($extension, ['jpg', 'jpeg', 'png']))
+                          <img src="{{ $path }}" alt="Fiche" class="img-fluid">
+                        @elseif($extension === 'pdf')
+                          <iframe src="{{ $path }}" width="100%" height="600px"></iframe>
+                        @else
+                          <p>Fichier non pris en charge</p>
+                        @endif
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                @endforeach
 
 
     <!-- Script pour confirmation avant lancement -->

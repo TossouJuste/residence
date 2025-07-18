@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'caissiere' => \App\Http\Middleware\CaissiereMiddleware::class,
         'chef_cite' => \App\Http\Middleware\ChefCiteMiddleware::class,
         'chef_batiment' => \App\Http\Middleware\ChefBatimentMiddleware::class,
+        'matricule.verifie' => \App\Http\Middleware\MatriculeVerified::class,
     ];
 }

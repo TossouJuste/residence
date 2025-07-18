@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\DemandeRecue;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Etablissement;
+use App\Models\VerificationMatricule;
 
 class DemandeResidenceController extends Controller
 {
@@ -54,6 +55,7 @@ class DemandeResidenceController extends Controller
     {
         $validatedData = $request->validate([
             'matricule' => 'required|string|max:50',
+            'verification_matricule_id' => 'required|string|max:50',
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'telephone' => 'required|string|max:20',
@@ -85,6 +87,7 @@ class DemandeResidenceController extends Controller
         // Vérifier si l'étudiant existe déjà
         $etudiant = \App\Models\Etudiant::where('matricule', $validatedData['matricule'])->first();
 
+
         if (!$etudiant) {
             // Créer un nouvel étudiant
             $etudiant = new \App\Models\Etudiant();
@@ -102,10 +105,19 @@ class DemandeResidenceController extends Controller
             $etudiant->type_handicap = $validatedData['type_handicap'] ?? null;
 
             if ($request->hasFile('certificat_handicap')) {
-                $etudiant->certificat_handicap = $request->file('certificat_handicap')->store('handicap');
+                $etudiant->certificat_handicap = $request->file('certificat_handicap')->store('handicap', 'public');
             }
 
             $etudiant->save();
+        }
+
+        $matricule = session('matricule_verifie');
+        $verification = VerificationMatricule::where('id', $request->verification_matricule_id)
+                                            ->where('matricule', $matricule)
+                                            ->first();
+
+        if (!$verification) {
+            return back()->with('error', 'Vérification invalide.');
         }
 
         // Vérifier une demande existante cette année pour cet étudiant
@@ -120,11 +132,12 @@ class DemandeResidenceController extends Controller
         // Créer la demande
         $demande = new \App\Models\Demande();
         $demande->etudiant_matricule = $etudiant->matricule;  // clé étrangère ici
+         $demande->verification_matricule_id = $verification->id;
         $demande->planification_id = $planification->id;
         $demande->etablissement_id = $validatedData['etablissement_id'];
         $demande->filiere = $validatedData['filiere'];
         $demande->annee_etude = $validatedData['annee_etude'];
-        $demande->fiche_preinscription = $request->file('fiche_inscription')->store('fiches');
+        $demande->fiche_preinscription = $request->file('fiche_inscription')->store('fiches', 'public');
         $demande->code_suivi = strtoupper(uniqid('REQ'));
         $demande->statut = 'En cours de traitement';
         $demande->save();
@@ -163,23 +176,24 @@ class DemandeResidenceController extends Controller
 
     public function storeSimple(Request $request)
     {
-        // ✅ Étape 1 : Validation des données
+        //  Étape 1 : Validation des données
         $validatedData = $request->validate([
             'matricule' => 'required|string|max:50',
+            'verification_matricule_id' => 'required|string|max:50',
             'etablissement_id' => 'required|exists:etablissements,id',
             'filiere' => 'required|string|max:255',
             'annee_etude' => 'required|string|max:255',
             'fiche_inscription' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10000',
         ]);
 
-        // ✅ Étape 2 : Vérifier l'existence de l'étudiant
+        //  Étape 2 : Vérifier l'existence de l'étudiant
         $etudiant = \App\Models\Etudiant::where('matricule', $validatedData['matricule'])->first();
 
         if (!$etudiant) {
             return back()->withInput()->with('error', 'Aucun étudiant trouvé avec ce matricule.');
         }
 
-        // ✅ Étape 3 : Vérifier qu'une planification est ouverte
+        //  Étape 3 : Vérifier qu'une planification est ouverte
         $planification = \App\Models\Planification::where('statut', 'ouverte')
             ->where('description', 'Lancement d\'inscription')
             ->latest()
@@ -189,7 +203,7 @@ class DemandeResidenceController extends Controller
             return back()->with('error', 'Aucune planification ouverte pour le moment.');
         }
 
-        // ✅ Étape 4 : Vérifier l’unicité de la demande pour cette année
+        //  Étape 4 : Vérifier l’unicité de la demande pour cette année
         $demandeExistante = \App\Models\Demande::where('etudiant_matricule', $etudiant->matricule)
             ->where('planification_id', $planification->id)
             ->first();
@@ -198,22 +212,33 @@ class DemandeResidenceController extends Controller
             return back()->with('error', 'Vous avez déjà soumis une demande cette année.');
         }
 
-        // ✅ Étape 5 : Enregistrement du fichier
+        $matricule = session('matricule_verifie');
+        $verification = VerificationMatricule::where('id', $request->verification_matricule_id)
+                                            ->where('matricule', $matricule)
+                                            ->first();
+
+        if (!$verification) {
+            return back()->with('error', 'Vérification invalide.');
+        }
+
+
+        //  Étape 5 : Enregistrement du fichier
         $fichePath = $request->file('fiche_inscription')->store('fiches', 'public'); // Stockage dans "storage/app/public/fiches"
 
-        // ✅ Étape 6 : Création de la demande
+        //  Étape 6 : Création de la demande
         $demande = new \App\Models\Demande();
         $demande->etudiant_matricule = $etudiant->matricule;
+        $demande->verification_matricule_id = $verification->id;
         $demande->planification_id = $planification->id;
         $demande->etablissement_id = $validatedData['etablissement_id'];
         $demande->filiere = $validatedData['filiere'];
         $demande->annee_etude = $validatedData['annee_etude'];
-         $demande->fiche_preinscription = $request->file('fiche_inscription')->store('fiches');
+        $demande->fiche_preinscription = $request->file('fiche_inscription')->store('fiches', 'public');;
         $demande->code_suivi = strtoupper(uniqid('REQ'));
         $demande->statut = 'En cours de traitement';
         $demande->save();
 
-        // ✅ Étape 7 : Envoi de l'e-mail de confirmation
+        //  Étape 7 : Envoi de l'e-mail de confirmation
         try {
             \Mail::to($etudiant->email)->send(new \App\Mail\DemandeRecue($demande, $demande->code_suivi));
         } catch (\Exception $e) {
@@ -221,7 +246,7 @@ class DemandeResidenceController extends Controller
             \Log::error("Erreur lors de l'envoi de l'email : " . $e->getMessage());
         }
 
-        // ✅ Étape 8 : Redirection avec confirmation
+        //  Étape 8 : Redirection avec confirmation
         return redirect()->route('demandes.confirmation', ['code_suivi' => $demande->code_suivi])
             ->with('success', 'Demande soumise avec succès !');
     }
@@ -329,7 +354,8 @@ class DemandeResidenceController extends Controller
         }
 
         // 🔹 Étape 4 : Vérifier si la demande est classée
-        $classement = Classement::where('code_suivi', $code_suivi)->first();
+       $classement = Classement::with('paiement')->where('code_suivi', $code_suivi)->first();
+
 
         if ($classement) {
             $cabine = Cabine::where('id', $classement->cabine_id)->first();

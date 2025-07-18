@@ -20,6 +20,7 @@ class Demande extends Model
         'etudiant_matricule',
         'etablissement_id',
         'planification_id',
+        'verification_matricule_id'
     ];
 
 
@@ -50,5 +51,10 @@ class Demande extends Model
     public function classement()
     {
         return $this->hasOne(Classement::class, 'code_suivi', 'code_suivi');
+    }
+    
+    public function verificationMatricule()
+    {
+        return $this->belongsTo(VerificationMatricule::class);
     }
 }

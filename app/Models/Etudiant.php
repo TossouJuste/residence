@@ -40,4 +40,5 @@ class Etudiant extends Model
     {
         return $this->hasMany(Demande::class, 'etudiant_matricule', 'matricule');
     }
+
 }

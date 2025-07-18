@@ -29,6 +29,7 @@ return new class extends Migration
         $table->unsignedBigInteger('planification_id');
         $table->foreign('planification_id')->references('id')->on('planifications')->onDelete('cascade');
 
+        $table->foreignId('verification_matricule_id')->constrained()->onDelete('cascade');
         $table->timestamps();
 
         // Contrainte : une seule demande par planification pour un même étudiant

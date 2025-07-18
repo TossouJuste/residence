@@ -39,4 +39,10 @@ class Classement extends Model
     {
         return $this->belongsTo(User::class, 'caissiere_id');
     }
+    /**
+     * Relation avec la Paiement (User)
+     */
+    public function paiement(){
+        return $this->hasOne(\App\Models\Paiement::class, 'classement_id');
+    }
 }

@@ -16,6 +16,9 @@ use App\Http\Controllers\CritereController;
 use App\Http\Controllers\PlanificationController;
 use App\Http\Controllers\AnneeAcademiqueController;
 use App\Http\Controllers\EtablissementController;
+use App\Http\Controllers\FedapayController;
+use App\Http\Controllers\BaseUacController;
+use App\Http\Controllers\VerificationMatriculeController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -78,6 +81,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         Route::middleware(['intendant'])->group(function () {
+        Route::name('base_uac.')->prefix('base-uac')->group(function () {
+                Route::get('/', [BaseUacController::class, 'index'])->name('index');
+                Route::get('/ajouter', [BaseUacController::class, 'create'])->name('create');
+                Route::post('/ajouter', [BaseUacController::class, 'store'])->name('store');
+            });
+        });
+
+
+        Route::middleware(['intendant'])->group(function () {
             Route::prefix('planifications')->name('planifications.')->group(function () {
                 Route::get('/', [PlanificationController::class, 'index'])->name('index');
                 Route::get('/create', [PlanificationController::class, 'create'])->name('create');
@@ -138,22 +150,55 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+
 Route::get('/', [DemandeResidenceController::class, 'index']);
-Route::get('/demande', [DemandeResidenceController::class, 'create'])->name('demandes.create');
-Route::get('/demande2', [DemandeResidenceController::class, 'create2'])->name('demandes2.create');
+Route::get('/demande/simple', [DemandeResidenceController::class, 'createSimple'])
+    ->middleware('matricule.verifie')
+    ->name('demandes.create.simple');
+
+Route::post('/demande/simple', [DemandeResidenceController::class, 'storeSimple'])
+    ->middleware('matricule.verifie')
+    ->name('demandes.store.simple');
+
+Route::get('/demande', [DemandeResidenceController::class, 'create'])
+    ->middleware('matricule.verifie')
+    ->name('demandes.create');
+
+Route::post('/demande', [DemandeResidenceController::class, 'store'])
+    ->middleware('matricule.verifie')
+    ->name('demandes.store');
+
+Route::get('/demande2', [DemandeResidenceController::class, 'create2'])
+    ->middleware('matricule.verifie')
+    ->name('demandes2.create');
+
+
 Route::get('/demande/confirmation/{code_suivi}', [DemandeResidenceController::class, 'confirmation'])->name('demandes.confirmation');
-Route::post('/demande', [DemandeResidenceController::class, 'store'])->name('demandes.store');
+
 Route::get('/suivre', [DemandeResidenceController::class, 'suivre'])->name('suivre');
 Route::post('/suivi-demande', [DemandeResidenceController::class, 'suivreDemande'])->name('suivi.demande');
 Route::get('/suivi/demande/{code_suivi}', [DemandeResidenceController::class, 'afficherDemande'])->name('afficher.demande');
-Route::get('/demande/simple', [DemandeResidenceController::class, 'createSimple'])->name('demandes.create.simple');
-Route::post('/demande/simple', [DemandeResidenceController::class, 'storeSimple'])->name('demandes.store.simple');
 
 Route::get('/validation/{code_suivi}', [ValidationController::class, 'validation'])->name('validation');
 Route::get('/validation-quittance/{code_suivi}', [ValidationController::class, 'validerQuittance'])->name('validation.quittance');
 Route::post('/submit-quittance/{code_suivi}', [ValidationController::class, 'storeQuittance'])->name('submit.quittance');
 Route::get('/validation-recu-loyer/{code_suivi}', [ValidationController::class, 'validerRecuLoyer'])->name('validation.recu_loyer');
 Route::post('/submit-recu/{code_suivi}', [ValidationController::class, 'storeRecu'])->name('submit.recu');
+
+Route::post('/make-payment/{classement_id}', [FedapayController::class, 'make_payment'])->name('paiement.make');
+Route::get('/payment/callback', [FedapayController::class, 'callback']);
+Route::get('/payementsucces', [FedapayController::class, 'payementsucces'])->name('paiement.success');
+
+Route::get('/verification-matricule', [VerificationMatriculeController::class, 'showForm'])->name('verification_matricule.form');
+Route::post('/verification-matricule', [VerificationMatriculeController::class, 'handleMatricule'])->name('verification_matricule.check');
+Route::post('/verification-code', [VerificationMatriculeController::class, 'verifyCode'])->name('verification_matricule.verify_code');
+
+Route::get('/verif/logout', function () {
+    session()->forget('matricule_verifie');
+    return redirect()->route('verification_matricule.form')
+        ->with('success', 'Vous avez été déconnecté avec succès.');
+})->name('verification_matricule.logout');
+
 
 Route::get('/error', function () {
     abort(500);

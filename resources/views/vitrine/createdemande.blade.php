@@ -68,10 +68,20 @@
             @csrf
 
             <div class="row">
-              <div class="col-md-6 form-group mb-3">
+                <div class="col-md-6 form-group mb-3">
                 <label for="matricule">Matricule <span class="text-danger">*</span></label>
-                <input type="text" name="matricule" id="matricule" class="form-control"  required />
-              </div>
+                <input type="text"
+                        name="matricule_display"
+                        id="matricule"
+                        class="form-control"
+                        value="{{ session('matricule_verifie') }}"
+                        disabled
+                />
+                <input type="hidden" name="matricule" value="{{ session('matricule_verifie') }}">
+                <input type="hidden" name="verification_matricule_id" value="{{ \App\Models\VerificationMatricule::where('matricule', session('matricule_verifie'))->value('id') }}">
+
+                </div>
+
               <div class="col-md-6 form-group mb-3">
                 <label for="nom">Nom <span class="text-danger">*</span></label>
                 <input type="text" name="nom" id="nom" class="form-control"  required />
@@ -184,16 +194,21 @@
               </div>
             </div>
 
-            <div class="form-group mb-3">
-              <input type="checkbox" name="certification" id="certification" required />
-              <label for="certification">
-                Je certifie sur l'honneur l'exactitude de tous les renseignements ci-dessus mentionnés.<br />
-                J'accepte encourir en cas de fausse déclaration une exclusion des résidences universitaires.
-              </label>
+           <div class="form-check mb-4">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="certification"
+                    id="certification"
+                    required
+                />
+                <label class="form-check-label" for="certification">
+                    <strong>Je certifie sur l'honneur</strong> l'exactitude de tous les renseignements mentionnés ci-dessus et j'accepte d'encourir, en cas de fausse déclaration, une <strong>exclusion des résidences universitaires</strong>.
+                </label>
             </div>
 
             <div class="text-center">
-              <button type="submit" class="btn btn-primary">Soumettre la demande</button>
+              <button type="submit" class="btn btn-success">Soumettre la demande</button>
             </div>
           </form>
         @else

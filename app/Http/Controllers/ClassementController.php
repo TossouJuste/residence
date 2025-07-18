@@ -111,7 +111,7 @@ public function exportPdf(Request $request)
     ->with('demande') // Assure que la relation est chargée
     ->get()
     ->sortBy(function ($classement) {
-        return $classement->demande->nom ?? '';
+        return $classement->demande->etudiant->nom ?? '';
     });
 
 

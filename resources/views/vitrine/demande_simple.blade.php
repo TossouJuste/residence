@@ -65,62 +65,79 @@
 
         @if ($planification)
           <form action="{{ route('demandes.store.simple') }}" method="POST" enctype="multipart/form-data" class="php-email-form mt-4">
-            @csrf
+  @csrf
 
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label for="matricule">Matricule <span class="text-danger">*</span></label>
-                <input type="text" name="matricule" id="matricule" class="form-control" required />
-              </div>
-              <div class="col-md-6 form-group mb-3">
-                <label for="etablissement_id">Établissement <span class="text-danger">*</span></label>
-                <select name="etablissement_id" id="etablissement_id" class="form-control" required>
-                  <option value="" disabled selected>Choisissez votre établissement</option>
-                  @foreach ($etablissements as $etablissement)
-                    <option value="{{ $etablissement->id }}">
-                      {{ $etablissement->nom }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
+  <div class="row">
+    <div class="col-md-6 form-group mb-3">
+      <label for="matricule">Matricule <span class="text-danger">*</span></label>
+      <input type="text"
+            name="matricule_affiche"
+            id="matricule"
+            class="form-control"
+            value="{{ session('matricule_verifie') }}"
+            disabled
+      />
+      <input type="hidden" name="matricule" value="{{ session('matricule_verifie') }}">
+      <input type="hidden" name="verification_matricule_id" value="{{ \App\Models\VerificationMatricule::where('matricule', session('matricule_verifie'))->value('id') }}">
+    </div>
 
-            <div class="row">
-              <div class="col-md-6 form-group mb-3">
-                <label for="filiere">Filière <span class="text-danger">*</span></label>
-                <input type="text" name="filiere" id="filiere" class="form-control" required />
-              </div>
-               <div class="col-md-6 form-group mb-3">
-                <label for="annee_etude">Année d'étude <span class="text-danger">*</span></label>
-                <select name="annee_etude" id="annee_etude" class="form-control" required>
-                  <option value="" disabled selected>Choisissez votre année d'étude</option>
-                  <option value="1">1ère année</option>
-                  <option value="2">2ème année</option>
-                  <option value="3">3ème année</option>
-                </select>
-              </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 form-group mb-3">
-                    <label for="fiche_inscription">
-                    Fiche de pré inscription validée ou non de l'année en cours <span class="text-danger">*</span>
-                    </label>
-                    <input type="file" name="fiche_inscription" id="fiche_inscription" class="form-control" required />
-                </div>
-            </div>
+    <div class="col-md-6 form-group mb-3">
+      <label for="etablissement_id">Établissement <span class="text-danger">*</span></label>
+      <select name="etablissement_id" id="etablissement_id" class="form-control" required>
+        <option value="" disabled {{ old('etablissement_id') ? '' : 'selected' }}>Choisissez votre établissement</option>
+        @foreach ($etablissements as $etablissement)
+          <option value="{{ $etablissement->id }}" {{ old('etablissement_id') == $etablissement->id ? 'selected' : '' }}>
+            {{ $etablissement->nom }}
+          </option>
+        @endforeach
+      </select>
+    </div>
+  </div>
 
-            <div class="form-group mb-3">
-              <input type="checkbox" name="certification" id="certification" required />
-              <label for="certification">
-                Je certifie sur l'honneur l'exactitude de tous les renseignements ci-dessus mentionnés.<br />
-                J'accepte encourir en cas de fausse déclaration une exclusion des résidences universitaires.
-              </label>
-            </div>
+  <div class="row">
+    <div class="col-md-6 form-group mb-3">
+      <label for="filiere">Filière <span class="text-danger">*</span></label>
+      <input type="text" name="filiere" id="filiere" class="form-control" value="{{ old('filiere') }}" required />
+    </div>
+    <div class="col-md-6 form-group mb-3">
+      <label for="annee_etude">Année d'étude <span class="text-danger">*</span></label>
+      <select name="annee_etude" id="annee_etude" class="form-control" required>
+        <option value="" disabled {{ old('annee_etude') ? '' : 'selected' }}>Choisissez votre année d'étude</option>
+        <option value="1" {{ old('annee_etude') == '1' ? 'selected' : '' }}>1ère année</option>
+        <option value="2" {{ old('annee_etude') == '2' ? 'selected' : '' }}>2ème année</option>
+        <option value="3" {{ old('annee_etude') == '3' ? 'selected' : '' }}>3ème année</option>
+      </select>
+    </div>
+  </div>
 
-            <div class="text-center">
-              <button type="submit" class="btn btn-primary">Soumettre la demande</button>
-            </div>
-          </form>
+  <div class="row">
+    <div class="col-md-12 form-group mb-3">
+      <label for="fiche_inscription">
+        Fiche de pré inscription validée ou non de l'année en cours <span class="text-danger">*</span>
+      </label>
+      <input type="file" name="fiche_inscription" id="fiche_inscription" class="form-control" required />
+    </div>
+  </div>
+
+  <div class="form-check mb-4">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      name="certification"
+      id="certification"
+      {{ old('certification') ? 'checked' : '' }}
+      required
+    />
+    <label class="form-check-label" for="certification">
+      <strong>Je certifie sur l'honneur</strong> l'exactitude de tous les renseignements mentionnés ci-dessus et j'accepte d'encourir, en cas de fausse déclaration, une <strong>exclusion des résidences universitaires</strong>.
+    </label>
+  </div>
+
+  <div class="text-center">
+    <button type="submit" class="btn btn-success">Soumettre la demande</button>
+  </div>
+</form>
+
         @else
           <div class="alert alert-danger">
             <strong>Aucune demande n'est autorisée en ce moment. Veuillez revenir plus tard.</strong>

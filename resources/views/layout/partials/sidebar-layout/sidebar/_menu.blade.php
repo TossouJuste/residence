@@ -122,15 +122,22 @@
             <!-- Paramètre -->
 
         @if (in_array(Auth::user()->role,['admin','intendant']))
-            <div data-kt-menu-trigger="click"
-                class="menu-item menu-accordion
-                {{ request()->routeIs('annees-academiques.*') || request()->routeIs('planifications.*') ? 'here show' : '' }}">
-                <span class="menu-link">
-                    <span class="menu-icon"><i class="fas fa-cogs fs-2"></i></span>
-                    <span class="menu-title">Paramètre</span>
-                    <span class="menu-arrow"></span>
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion
+                    {{ request()->routeIs('annees-academiques.*') || request()->routeIs('planifications.*') ? 'here show' : '' }}">
+                    <span class="menu-link">
+                        <span class="menu-icon"><i class="fas fa-cogs fs-2"></i></span>
+                        <span class="menu-title">Paramètre</span>
+                        <span class="menu-arrow"></span>
                 </span>
                 <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
+                        <a class="menu-link {{ request()->routeIs('etablissements.*') ? 'active' : '' }}"
+                            href="{{ route('etablissements.index') }}">
+                            <span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+                            <span class="menu-title">Etablissement</span>
+                        </a>
+                    </div>
                     <div class="menu-item">
                         <a class="menu-link {{ request()->routeIs('annees-academiques.*') ? 'active' : '' }}"
                             href="{{ route('annees-academiques.index') }}">

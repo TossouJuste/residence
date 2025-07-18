@@ -387,7 +387,7 @@ textarea:focus {
 }
 
 /* Pour les options sélectionnées dans les menus déroulants */
- 
+
 /* Pour les options survolées */
 select option:hover {
   background-color: #c3e6cb;

@@ -13,7 +13,7 @@
 <body>
     <h3>Liste des demandes – Année académique : {{ $academicYear->nom ?? 'Inconnue' }}</h3>
 
-    <table>
+     <table>
         <thead>
             <tr>
                 <th>#</th>
@@ -24,21 +24,19 @@
                 <th>Sexe</th>
                 <th>Date naissance</th>
                 <th>Filière</th>
-                <th>Statut aide</th>
             </tr>
         </thead>
         <tbody>
             @forelse($demandes as $index => $demande)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $demande->nom }}</td>
-                    <td>{{ $demande->prenom }}</td>
-                    <td>{{ $demande->telephone }}</td>
-                    <td>{{ $demande->email }}</td>
-                    <td>{{ $demande->sexe }}</td>
-                    <td>{{ $demande->date_naissance }}</td>
+                    <td>{{ $loop->iteration }} </td>
+                    <td>{{ $demande->etudiant->nom }}</td>
+                    <td>{{ $demande->etudiant->prenom }}</td>
+                    <td>{{ $demande->etudiant->telephone }}</td>
+                    <td>{{ $demande->etudiant->email }}</td>
+                    <td>{{ $demande->etudiant->sexe }}</td>
+                    <td>{{ \Carbon\Carbon::parse($demande->etudiant->date_naissance)->format('d/m/Y') }}</td>
                     <td>{{ $demande->filiere }}</td>
-                    <td>{{ ucfirst($demande->statut_aide) }}</td>
                 </tr>
             @empty
                 <tr>

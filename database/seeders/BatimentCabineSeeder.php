@@ -28,13 +28,13 @@ class BatimentCabineSeeder extends Seeder
 
             for ($i = 1; $i <= 5; $i++) {
                 Cabine::create([
-                    'code' => $batNom . $i . 'à 2',
+                    'code' => $batNom . $i . ' à 2',
                     'batiment_id' => $batiment->id,
                     'places_initiales' => 2,
                     'places_disponibles' => 2,
                 ]);
                 Cabine::create([
-                    'code' => $batNom . $i . 'à 3',
+                    'code' => $batNom . $i . ' à 3',
                     'batiment_id' => $batiment->id,
                     'places_initiales' => 3,
                     'places_disponibles' => 3,
