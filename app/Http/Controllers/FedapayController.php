@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classement;
 use App\Models\Transation;
 use Carbon\Carbon;
 use FedaPay;
@@ -46,7 +47,7 @@ class FedapayController extends Controller
                 ]
             ));
             $token = $transaction->generateToken();
-            
+
             // ENregistrer  les transactions
             // TransactionVerification::create([
             //     'transaction_id'=>$transaction->id
@@ -114,6 +115,56 @@ class FedapayController extends Controller
     public function payementsucces()
     {
         return view('vitrine.payementsucces');
+    }
+
+    public function callback_kkiapay($classement_id, Request $request)
+    {
+        $transaction_id = $request->input('transaction_id');
+        $message = '';
+        $classement = Classement::findOrFail($classement_id);
+        // test
+        // // test
+        try {
+                $kkiapay = new \Kkiapay\Kkiapay(env('KKIAPAY_PUBLIC_KEY'),
+                                env('KKIAPAY_PRIVATE_KEY'),
+                                env('KKIAPAY_SECRET_KEY'),
+                                env('KKIAPAY_ENVIRONMENT'));
+
+                $transaction=$kkiapay->verifyTransaction($transaction_id);
+            // $status='success';
+            switch ($transaction->status) {
+                case 'SUCCESS':
+                    $message = 'Transaction approuvée.';
+                    Paiement::create([
+                        "classement_id" => $classement_id,
+                        "reference" => $transaction->reference??"reference",
+                        "montant" => 100
+                    ]);
+                            $message = 'Paiement effectué avec succès.';
+                    return redirect(url('payementsucces/'))->with(['success' => $message]);
+                    // break;
+                case 'FAILED':
+                    $message = 'Transaction annulée.';
+                    return redirect(url('payementsucces/'))->with(['error' => $message]);
+
+                    // break;
+                case 'INSUFFICIENT_FUND':
+                    $message = 'Fond insuffisant';
+                    return redirect(url('payementsucces/'))->with(['error' => $message]);
+                    // break;
+                default :
+                    $message = 'Une erreur s\'est prouite';
+                        return redirect(url('payementsucces/'))->with(['error' => $message]);
+                        // break;
+            }
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            // dd($e->getMessage());
+            return redirect('payementsucces/')->with('error', $e->getMessage());
+        }
+
+       return redirect(url('payementsucces/'))->with(['error' => $message]);
+
     }
 
 }

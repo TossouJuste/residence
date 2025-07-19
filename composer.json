@@ -10,6 +10,7 @@
         "diglactic/laravel-breadcrumbs": "^8.1",
         "fedapay/fedapay-php": "^0.4.7",
         "guzzlehttp/guzzle": "^7.2",
+        "kkiapay/kkiapay-php": "dev-master",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.6",
