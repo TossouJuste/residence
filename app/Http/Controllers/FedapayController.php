@@ -137,7 +137,7 @@ class FedapayController extends Controller
                     $message = 'Transaction approuvée.';
                     Paiement::create([
                         "classement_id" => $classement_id,
-                        "reference" => $transaction->reference??"reference",
+                        "reference" => $transaction->transactionId??"reference",
                         "montant" => 100
                     ]);
                             $message = 'Paiement effectué avec succès.';

@@ -88,7 +88,7 @@
                  <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>Fiche <br> Préinscription</th>
+                            <th>Fiche</th>
                              <th>Matricule</th>
                              <th>Nom & Prénom</th>
                             <th>Code Suivi</th>

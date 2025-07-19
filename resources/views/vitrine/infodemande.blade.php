@@ -169,7 +169,7 @@ echo match($message) {
                                                                                     :</label>
                                                                                 <input type="tel" name="telephone"
                                                                                     required class="form-control"
-                                                                                    placeholder="Ex : 97000000"
+                                                                                    placeholder="Ex : 61000000"
                                                                                     id="telephone">
                                                                             </div>
                                                                         </td>
@@ -232,7 +232,7 @@ echo match($message) {
                     openKkiapayWidget({
                         amount: "100",
                         position: "center",
-                        callback: "{{ route('payment.callback', ['classement_id' => $classement->id]) }}",
+                        callback: "{{ route('paiement.callback', ['classement_id' => $classement->id]) }}",
                         data: "",
                         theme: "green",
                         sandbox: true,

@@ -186,7 +186,7 @@ Route::get('/validation-recu-loyer/{code_suivi}', [ValidationController::class, 
 Route::post('/submit-recu/{code_suivi}', [ValidationController::class, 'storeRecu'])->name('submit.recu');
 
 Route::post('/make-payment/{classement_id}', [FedapayController::class, 'make_payment'])->name('paiement.make');
-Route::get('/payment/callback/{classement_id}', [FedapayController::class, 'callback_kkiapayv'])->name('paiement.callback');
+Route::get('/payment/callback/{classement_id}', [FedapayController::class, 'callback_kkiapay'])->name('paiement.callback');
 Route::get('/payementsucces', [FedapayController::class, 'payementsucces'])->name('paiement.success');
 
 Route::get('/verification-matricule', [VerificationMatriculeController::class, 'showForm'])->name('verification_matricule.form');
