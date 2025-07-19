@@ -56,8 +56,9 @@
                             <tr>
                                 <td>{{ $planification->description }}</td>
                                 <td>{{ $planification->anneeAcademique->nom }}</td>
-                                <td>{{ $planification->date_debut }}</td>
-                                <td>{{ $planification->date_fin }}</td>
+                                <td>{{ \Carbon\Carbon::parse($planification->date_debut)->format('d/m/Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($planification->date_fin)->format('d/m/Y') }}</td>
+
                                 <td>
                                     <span class="badge {{ $planification->statut == 'ouverte' ? 'badge-success' : 'badge-danger' }}">
                                         {{ ucfirst($planification->statut) }}

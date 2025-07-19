@@ -5,7 +5,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title">Étudiants enregistrés dans la base UAC</h3>
-                <a href="{{ route('base_uac.create') }}" class="btn btn-primary">Ajouter un étudiant</a>
+                <a href="{{ route('base_uac.create') }}" class="btn btn-success">Ajouter un étudiant</a>
             </div>
 
             <div class="card-body">

@@ -194,26 +194,7 @@ echo match($message) {
                                                         @endif
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                    @endif
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <script>
-            function afficherFormulaire() {
-                document.getElementById("formulairePaiement").classList.remove("hidden");
-            }
-        </script>
-
-        <script src="https://cdn.kkiapay.me/k.js"></script>
-
-        <script>
+                                                 <script>
             const paymentForm = document.getElementById('formulairePaiement');
             const telephone_input = document.getElementById('telephone');
             const email_input = document.getElementById('email');
@@ -257,6 +238,26 @@ echo match($message) {
             });
         </script>
 
+                                            </tbody>
+                                        </table>
+                                    @endif
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            function afficherFormulaire() {
+                document.getElementById("formulairePaiement").classList.remove("hidden");
+            }
+        </script>
+
+        <script src="https://cdn.kkiapay.me/k.js"></script>
+
+       
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
             <i class="bi bi-arrow-up-short"></i>
         </a>

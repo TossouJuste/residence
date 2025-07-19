@@ -32,7 +32,7 @@
         <tbody>
             @forelse($classements as $index => $classement)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $loop->iteration }} </td>
                     <td>{{ $classement->demande->etudiant->nom }} {{ $classement->demande->etudiant->prenom ?? 'N/A' }}</td>
                    <td>{{ $classement->demande->etudiant->date_naissance ? \Carbon\Carbon::parse($classement->demande->etudiant->date_naissance)->format('d/m/Y') : 'N/A' }}</td>
                     <td>{{ $classement->demande->etablissement->nom ?? 'N/A' }}</td>

@@ -25,7 +25,7 @@
                 <li>
                     <form action="{{ route('verification_matricule.logout') }}" method="GET" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-danger ms-2">
-                        <i class="bi bi-box-arrow-right me-1"></i> Se déconnecter
+                        <i class="bi bi-box-arrow-right me-1"></i> Quitter
                     </button>
                     </form>
                 </li>

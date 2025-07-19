@@ -174,8 +174,7 @@
                     </div>
                     <div class="modal-body">
                         <p><strong>Référence :</strong> {{ $classement->paiement->reference }}</p>
-                        <p><strong>Montant :</strong> {{ $classement->paiement->montant }} FCFA</p>
-                        <p><strong>Téléphone :</strong> {{ $classement->paiement->telephone }}</p>
+                        <p><strong>Montant :</strong> {{ $classement->paiement->montant }} FCFA</p> 
                         <p><strong>Date :</strong> {{ $classement->paiement->created_at->format('d/m/Y H:i') }}</p>
                         <hr>
                         @if ($classement->est_valide)

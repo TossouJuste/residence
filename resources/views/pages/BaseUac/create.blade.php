@@ -3,6 +3,9 @@
 
     <div class="container">
         <div class="card">
+             <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="card-title">Créer un étudiant</h2>
+            </div>
 
             <div class="card-body">
                 <form action="{{ route('base_uac.store') }}" method="POST">
